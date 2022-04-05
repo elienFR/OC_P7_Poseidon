@@ -1,9 +1,11 @@
 package com.openclassrooms.poseidon.controllers;
 
+import com.openclassrooms.poseidon.config.SpringSecurityConfig;
 import com.openclassrooms.poseidon.domain.User;
 import com.openclassrooms.poseidon.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,6 +20,9 @@ import javax.validation.Valid;
 public class UserController {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private SpringSecurityConfig springSecurityConfig;
 
     @RequestMapping("/user/list")
     public String home(Model model)
@@ -58,7 +63,7 @@ public class UserController {
             return "user/update";
         }
 
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        PasswordEncoder encoder = springSecurityConfig.passwordEncoder();
         user.setPassword(encoder.encode(user.getPassword()));
         user.setId(id);
         userRepository.save(user);
