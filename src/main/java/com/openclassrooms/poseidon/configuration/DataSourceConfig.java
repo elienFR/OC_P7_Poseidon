@@ -1,4 +1,4 @@
-package com.openclassrooms.poseidon.config;
+package com.openclassrooms.poseidon.configuration;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,7 +20,8 @@ public class DataSourceConfig {
   private String password;
   @Value("${spring.datasource.url}")
   private String url;
-  @Value("${spring.datasource.driver-class-name}")
+//  @Value("${spring.datasource.driver-class-name}")
+  @Value("${spring.jpa.properties.hibernate.dialect}")
   private String driver;
 
   @Bean

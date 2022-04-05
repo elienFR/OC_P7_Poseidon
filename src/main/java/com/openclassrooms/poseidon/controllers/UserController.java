@@ -1,6 +1,6 @@
 package com.openclassrooms.poseidon.controllers;
 
-import com.openclassrooms.poseidon.config.SpringSecurityConfig;
+import com.openclassrooms.poseidon.configuration.SpringSecurityConfig;
 import com.openclassrooms.poseidon.domain.User;
 import com.openclassrooms.poseidon.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

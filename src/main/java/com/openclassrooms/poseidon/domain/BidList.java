@@ -8,58 +8,82 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "bidlist")
 public class BidList {
+  @Column(name = "bidlistid")
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Integer BidListId;
+  private Integer bidListId;
+
+  @Column(name = "account")
   @NotBlank(message = "Account is mandatory")
   private String account;
+
+  @Column(name = "type")
   @NotBlank(message = "Type is mandatory")
   private String type;
 
+  @Column(name = "bidquantity")
   private Double bidQuantity;
 
+  @Column(name = "askquantity")
   private Double askQuantity;
 
+  @Column(name = "bid")
   private Double bid;
 
+  @Column(name = "ask")
   private Double ask;
 
+  @Column(name = "benchmark")
   private String benchmark;
 
+  @Column(name = "bidlistdate")
   private Timestamp bidListDate;
 
+  @Column(name = "commentary")
   private String commentary;
 
+  @Column(name = "security")
   private String security;
 
+  @Column(name = "status")
   private String status;
 
+  @Column(name = "trader")
   private String trader;
 
+  @Column(name = "book")
   private String book;
 
+  @Column(name = "creationname")
   private String creationName;
 
+  @Column(name = "creationdate")
   private Timestamp creationDate;
 
+  @Column(name = "revisionname")
   private String revisionName;
 
+  @Column(name = "revisiondate")
   private Timestamp revisionDate;
 
+  @Column(name = "dealname")
   private String dealName;
 
+  @Column(name = "dealtype")
   private String dealType;
 
+  @Column(name = "sourcelistid")
   private String sourceListId;
 
+  @Column(name = "side")
   private String side;
 
   public Integer getBidListId() {
-    return BidListId;
+    return bidListId;
   }
 
   public void setBidListId(Integer bidListId) {
-    BidListId = bidListId;
+    this.bidListId = bidListId;
   }
 
   public String getAccount() {

@@ -1,4 +1,4 @@
-package com.openclassrooms.poseidon.config;
+package com.openclassrooms.poseidon.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -37,20 +37,24 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   public void configure(HttpSecurity httpSecurity) throws Exception {
     httpSecurity.authorizeRequests()
-      .antMatchers("/css/**", "/js/**", "image/**").permitAll()
+      .antMatchers("/css/**").permitAll()
       .antMatchers("/").permitAll()
       .antMatchers("/login").permitAll()
+      .antMatchers("/**").hasRole("ADMIN")
+//      .antMatchers("/admin**").hasRole("ADMIN")
+//      .antMatchers("/bidList/list").hasRole("ADMIN")
+//      .antMatchers("/user**").hasRole("ADMIN")
 
       .anyRequest().authenticated()
 
       .and()
       .formLogin()
       .loginProcessingUrl("/login_perform")
-      .defaultSuccessUrl("/home", true)
+      .defaultSuccessUrl("/admin/home", false)
 
+      // TODO : Do we add OAuth2.0 authentication ?
 //      .and()
 //      .oauth2Login()
-//      .loginPage("/login")
 
       .and()
       // 31 536 000 seconds which corresponds to one year of validity token.
@@ -58,7 +62,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
       .and()
       .logout()
-      .logoutUrl("/app-perform")
+      .logoutUrl("/app-logout")
       .invalidateHttpSession(true)
       .logoutSuccessUrl("/")
       .deleteCookies("JSESSIONID")
