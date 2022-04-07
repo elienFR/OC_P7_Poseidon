@@ -17,4 +17,10 @@ public class BidListService {
   public Iterable<BidList> getAll() {
     return bidListRepository.findAll();
   }
+
+  public void delete(Integer id) {
+    BidList bidListToDelete = bidListRepository.findById(id)
+      .orElseThrow(() -> new IllegalArgumentException("Invalid bidList Id:" + id));
+    bidListRepository.delete(bidListToDelete);
+  }
 }

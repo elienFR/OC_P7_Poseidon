@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 
+// TODO : Reprendre le code pour intégrer un UserService.
 @Controller
 public class UserController {
     @Autowired
@@ -48,6 +49,7 @@ public class UserController {
         return "user/add";
     }
 
+    // TODO : ALWAYS CHECK THAT PRINCIPAL IS THE SAME USER YOU WANT TO UPDATE
     @GetMapping("/user/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));

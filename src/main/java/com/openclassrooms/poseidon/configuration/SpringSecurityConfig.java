@@ -52,9 +52,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
       .loginProcessingUrl("/login_perform")
       .defaultSuccessUrl("/admin/home", false)
 
-      // TODO : Do we add OAuth2.0 authentication ?
-//      .and()
-//      .oauth2Login()
+//       TODO : Do we add OAuth2.0 authentication ?
+      .and()
+      .oauth2Login()
 
       .and()
       // 31 536 000 seconds which corresponds to one year of validity token.
