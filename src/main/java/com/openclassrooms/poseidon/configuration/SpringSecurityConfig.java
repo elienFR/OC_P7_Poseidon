@@ -39,6 +39,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     httpSecurity.authorizeRequests()
       .antMatchers("/css/**").permitAll()
       .antMatchers("/").permitAll()
+      // TODO : Remove /test from all permission
+      .antMatchers("/api/**").permitAll()
+      .antMatchers("/test").permitAll()
+      ///////////////////////////////////////////
       .antMatchers("/login").permitAll()
       .antMatchers("/**").hasRole("ADMIN")
 //      .antMatchers("/admin**").hasRole("ADMIN")

@@ -1,5 +1,6 @@
 package com.openclassrooms.poseidon.controllers;
 
+import com.openclassrooms.poseidon.controllers.rest.BidListRestController;
 import com.openclassrooms.poseidon.domain.BidList;
 import com.openclassrooms.poseidon.services.BidListService;
 import org.apache.logging.log4j.LogManager;
@@ -22,13 +23,17 @@ public class BidListController {
     @Autowired
     private BidListService bidListService;
 
+    @Autowired
+    private BidListRestController bidListRestController;
+
     private static final Logger LOGGER = LogManager.getLogger(BidListController.class);
 
     @RequestMapping("/list")
     public String home(Model model)
     {
         LOGGER.info("Fetching /bidList/list...");
-        model.addAttribute("bidLists", bidListService.getAll());
+
+        model.addAttribute("bidLists", bidListRestController.getAll());
         return "bidList/list";
     }
 
@@ -62,7 +67,11 @@ public class BidListController {
 
     @GetMapping("/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id, Model model) {
-        bidListService.delete(id);
+          BidList bidListToDelete = bidListService.findById(id)
+          .orElseThrow(() -> new IllegalArgumentException("Invalid bidList Id:" + id));
+
+          bidListRestController.delete(bidListToDelete);
+
         return "redirect:/bidList/list";
     }
 }
