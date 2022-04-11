@@ -2,6 +2,7 @@ package com.openclassrooms.poseidon.domain;
 
 
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.NumberFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -27,10 +28,12 @@ public class BidList {
 
   @Column(name = "bidquantity")
   @NotNull(message = "Bid Quantity must be superior to 0")
+  @NumberFormat
   @Positive(message = "Bid Quantity must be superior to 0")
   private Double bidQuantity;
 
   @Column(name = "askquantity")
+  @Positive(message = "Bid Quantity must be superior to 0")
   private Double askQuantity;
 
   @Column(name = "bid")

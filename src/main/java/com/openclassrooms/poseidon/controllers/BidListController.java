@@ -2,7 +2,6 @@ package com.openclassrooms.poseidon.controllers;
 
 import com.openclassrooms.poseidon.controllers.rest.BidListRestController;
 import com.openclassrooms.poseidon.domain.BidList;
-import com.openclassrooms.poseidon.services.BidListService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

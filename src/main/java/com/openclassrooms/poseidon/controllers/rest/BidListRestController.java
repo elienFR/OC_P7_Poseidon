@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -59,6 +60,13 @@ public class BidListRestController {
     return ex.getLocalizedMessage();
   }
 
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @ExceptionHandler(HttpMessageNotReadableException.class)
+  public String handleValidationExceptions(
+    HttpMessageNotReadableException ex) {
+    return "The json you provided cannot be parsed. Some variable does not match the scheme.";
+  }
+
   /**
    * this method is one of the Exception Handler to display specific exceptions from
    * this controller.
@@ -90,7 +98,8 @@ public class BidListRestController {
    * @param id is the bid's id you are looking for.
    * @return an optional bidList object
    */
-  public Optional<BidList> getById(Integer id) {
+  @GetMapping("/list/{id}")
+  public Optional<BidList> getById(@PathVariable Integer id) {
     LOGGER.info("API Request -> get bid with Id : " + id + "...");
     return bidListService.findById(id);
   }
