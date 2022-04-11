@@ -131,7 +131,7 @@ public class CurvePointRestController {
    */
   @PutMapping("/update")
   @Transactional
-  public ResponseEntity<String> update(CurvePoint curvePoint) {
+  public ResponseEntity<String> update(@RequestBody CurvePoint curvePoint) {
     LOGGER.info("API Request -> updating curve point : ");
     LOGGER.info(curvePoint.toString());
     curvePointService.findById(curvePoint.getId()).orElseThrow(
@@ -153,7 +153,7 @@ public class CurvePointRestController {
   public ResponseEntity<String> delete(@RequestParam Integer id) {
     LOGGER.info("API Request -> deleting curve point with id : " + id);
     CurvePoint curvePointToDelete = curvePointService.findById(id)
-      .orElseThrow(() -> new IllegalArgumentException("Invalid curve point id:" + id));
+      .orElseThrow(() -> new NullPointerException("No curve point with id " + id + " exists in DB."));
     curvePointService.delete(curvePointToDelete);
     return ResponseEntity.ok("Curve point with id " + id + " has been deleted successfully.");
   }
