@@ -1,6 +1,11 @@
 package com.openclassrooms.poseidon.controllers;
 
+import com.openclassrooms.poseidon.controllers.rest.CurvePointRestController;
+import com.openclassrooms.poseidon.domain.BidList;
 import com.openclassrooms.poseidon.domain.CurvePoint;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,43 +17,109 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.validation.Valid;
 
 @Controller
+@RequestMapping("/curvePoint")
 public class CurveController {
-    // TODO: Inject Curve Point service
 
-    @RequestMapping("/curvePoint/list")
+    private static final Logger LOGGER = LogManager.getLogger(BidListController.class);
+
+    @Autowired
+    private CurvePointRestController curvePointRestController;
+
+    /**
+     * This method is used to display all curve points in a list.
+     *
+     * @param model is the model that display the page correctly.
+     * @return is a string path where to find the view for this controller's method.
+     */
+    @GetMapping("/list")
     public String home(Model model)
     {
-        // TODO: find all Curve Point, add to model
+        LOGGER.info("Fetching /curvePoint/list...");
+        model.addAttribute("curvePoints", curvePointRestController.getAll());
         return "curvePoint/list";
     }
 
-    @GetMapping("/curvePoint/add")
-    public String addBidForm(CurvePoint bid) {
+    /**
+     * This method is used to add a curve point in database.
+     *
+     * @param curvePoint is the curve point Object used to display the page correctly.
+     * @return is a string path where to find the view for this controller's method.
+     */
+    @GetMapping("/add")
+    public String addBidForm(CurvePoint curvePoint) {
+        LOGGER.info("Fetching /curvePoint/add...");
         return "curvePoint/add";
     }
 
-    @PostMapping("/curvePoint/validate")
+    /**
+     * This method is used to validate a new curve point before adding it to database.
+     *
+     * @param curvePoint is the curve point Object in validation before add.
+     * @param result is the BindingResult object that checks if errors are present in curve point object.
+     * @param model is the model that display the page correctly.
+     * @return is a string path where to find the view for this controller's method.
+     */
+    @PostMapping("/validate")
     public String validate(@Valid CurvePoint curvePoint, BindingResult result, Model model) {
-        // TODO: check data valid and save to db, after saving return Curve list
+        LOGGER.info("Fetching /curvePoint/validate...");
+        LOGGER.info("Validating entries...");
+        if (!result.hasErrors()) {
+            model.addAttribute("curvePoints", curvePointRestController.getAll());
+            curvePointRestController.create(curvePoint);
+            return "redirect:/curvePoint/list";
+        }
         return "curvePoint/add";
     }
 
-    @GetMapping("/curvePoint/update/{id}")
+    /**
+     * This method is used to display the update page of an existing curve point before updating it to database.
+     *
+     * @param id is the curve point's id that is supposed to be updated.
+     * @param model is the model that display the page correctly.
+     * @return is a string path where to find the view for this controller's method.
+     */
+    @GetMapping("/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        // TODO: get CurvePoint by Id and to model then show to the form
+        LOGGER.info("Fetching threw /curvePoint/update/" + id);
+        CurvePoint curvePoint = curvePointRestController.getById(id).orElseThrow(
+          () -> new NullPointerException("No curve point found with this id (" + id + ")")
+        );
+        model.addAttribute("curvePoint", curvePoint);
         return "curvePoint/update";
     }
 
-    @PostMapping("/curvePoint/update/{id}")
+    /**
+     * This method is used to validate and update an existing curve point into database.
+     *
+     * @param id is the curve point's id  that is supposed to be updated.
+     * @param curvePoint is the curve point object to update through this method.
+     * @param result is the BindingResult object that checks if errors are present in bid object.
+     * @param model is the model that display the page correctly.
+     * @return is a string path where to find the view for this controller's method.
+     */
+    @PostMapping("/update/{id}")
     public String updateBid(@PathVariable("id") Integer id, @Valid CurvePoint curvePoint,
                              BindingResult result, Model model) {
-        // TODO: check required fields, if valid call service to update Curve and return Curve list
+        LOGGER.info("Updating through /curvePoint/update/" + id);
+        if (result.hasErrors()){
+            return "curvePoint/update";
+        }
+        curvePointRestController.update(curvePoint);
+        model.addAttribute("curvePoints", curvePointRestController.getAll());
         return "redirect:/curvePoint/list";
     }
 
-    @GetMapping("/curvePoint/delete/{id}")
+    /**
+     * This method is used to delete an existing bid from database.
+     *
+     * @param id is the curve point's id that is supposed to be deleted.
+     * @param model is the model that display the page correctly.
+     * @return is a string path where to find the view for this controller's method.
+     */
+    @GetMapping("/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id, Model model) {
-        // TODO: Find Curve by Id and delete the Curve, return to Curve list
+        LOGGER.info("Fetching /curvePoint/delete/" + id);
+        curvePointRestController.delete(id);
         return "redirect:/curvePoint/list";
     }
 }

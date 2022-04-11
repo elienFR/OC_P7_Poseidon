@@ -21,7 +21,8 @@ import java.util.Optional;
 import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 /**
- * This class is the REST Controller to communicate with database through JSON files.
+ * This class is the REST Controller to communicate with database through JSON files
+ * with bidList objects.
  */
 @RestController
 @RequestMapping("${api.ver}" + "/bidList")
@@ -115,7 +116,7 @@ public class BidListRestController {
   public ResponseEntity<String> delete(@RequestParam Integer id) {
     LOGGER.info("API Request -> deleting bid with id : " + id);
     BidList bidListToDelete = bidListService.findById(id)
-      .orElseThrow(() -> new IllegalArgumentException("Invalid bidList Id:" + id));
+      .orElseThrow(() -> new IllegalArgumentException("Invalid bidList id:" + id));
     bidListService.delete(bidListToDelete);
     return ResponseEntity.ok("BidList with id " + id + " has been deleted successfully.");
   }
@@ -131,8 +132,8 @@ public class BidListRestController {
   public ResponseEntity<String> create(@Valid @RequestBody BidList bid) {
     LOGGER.info("API Request -> saving bid : ");
     LOGGER.info(bid.toString());
-    LOGGER.info("bid saved successfully");
     BidList savedBid = bidListService.save(bid);
+    LOGGER.info("bid saved successfully");
     return ResponseEntity.ok("Successfully created with id : " + savedBid.getBidListId() + ".");
   }
 
@@ -152,6 +153,6 @@ public class BidListRestController {
     );
     LOGGER.info("bid updated successfully");
     bidListService.save(bid);
-    return ResponseEntity.ok("Bid successfully updated");
+    return ResponseEntity.ok("Bid successfully updated !");
   }
 }

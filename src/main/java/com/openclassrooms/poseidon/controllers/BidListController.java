@@ -71,7 +71,7 @@ public class BidListController {
   /**
    * This method is used to display the update page of an existing bid before updating it to database.
    *
-   * @param id is the bidList's id  that is supposed to be updated.
+   * @param id is the bidList's id that is supposed to be updated.
    * @param model is the model that display the page correctly.
    * @return is a string path where to find the view for this controller's method.
    */
@@ -109,7 +109,7 @@ public class BidListController {
   /**
    * This method is used to delete an existing bid from database.
    *
-   * @param id is the bidList's id  that is supposed to be deleted.
+   * @param id is the bidList's id that is supposed to be deleted.
    * @param model is the model that display the page correctly.
    * @return is a string path where to find the view for this controller's method.
    */
