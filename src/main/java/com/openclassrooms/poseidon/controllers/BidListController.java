@@ -22,8 +22,6 @@ public class BidListController {
 
   private static final Logger LOGGER = LogManager.getLogger(BidListController.class);
   @Autowired
-  private BidListService bidListService;
-  @Autowired
   private BidListRestController bidListRestController;
 
   /**
@@ -81,7 +79,7 @@ public class BidListController {
   @GetMapping("/update/{id}")
   public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
     LOGGER.info("Fetching threw /bidList/update/" + id);
-    BidList bidList = bidListService.findById(id).orElseThrow(
+    BidList bidList = bidListRestController.getById(id).orElseThrow(
       () -> new NullPointerException("No bid found with this id (" + id + ")")
     );
     model.addAttribute("bidList", bidList);
@@ -100,7 +98,7 @@ public class BidListController {
   @PostMapping("/update/{id}")
   public String updateBid(@PathVariable("id") Integer id, @Valid BidList bidList,
                           BindingResult result, Model model) {
-    LOGGER.info("Updating threw /bidList/update/" + id);
+    LOGGER.info("Updating through /bidList/update/" + id);
     if (result.hasErrors()){
       return "bidlist/update";
     }

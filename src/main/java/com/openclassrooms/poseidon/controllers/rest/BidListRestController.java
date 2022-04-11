@@ -15,6 +15,7 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
@@ -22,7 +23,7 @@ import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
  * This class is the REST Controller to communicate with database through JSON files.
  */
 @RestController
-@RequestMapping("${api.ver}" +"/bidList")
+@RequestMapping("${api.ver}" + "/bidList")
 public class BidListRestController {
 
   private static final Logger LOGGER = LogManager.getLogger(BidListRestController.class);
@@ -84,6 +85,17 @@ public class BidListRestController {
   }
 
   /**
+   * This method is used to recover a specific bid thanks to its id.
+   *
+   * @param id is the bid's id you are looking for.
+   * @return an optional bidList object
+   */
+  public Optional<BidList> getById(Integer id) {
+    LOGGER.info("API Request -> get bid with Id : " + id + "...");
+    return bidListService.findById(id);
+  }
+
+  /**
    * This method is used to delete a bid from database.
    *
    * @param id is the id of the bid you want to delete.
@@ -133,5 +145,4 @@ public class BidListRestController {
     bidListService.save(bid);
     return ResponseEntity.ok("Bid successfully updated");
   }
-
 }
