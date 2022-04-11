@@ -38,7 +38,7 @@
 			</thead>
 			<tbody>
 				<tr th:if="${bidLists.empty}">
-	                <td colspan="3" th:text="#{bidList.noBidList}">No Bid made yet !</td>
+	                <td colspan="5" th:text="#{bidList.noBidList}">No Bid made yet !</td>
 	            </tr>
 	            <tr th:each="bidList : ${bidLists}">
                     <td>
