@@ -123,8 +123,8 @@ public class BidListRestController {
     LOGGER.info("API Request -> saving bid : ");
     LOGGER.info(bid.toString());
     LOGGER.info("bid saved successfully");
-    bidListService.save(bid);
-    return ResponseEntity.ok("Successfully posted");
+    BidList savedBid = bidListService.save(bid);
+    return ResponseEntity.ok("Successfully created with id : " + savedBid.getBidListId() + ".");
   }
 
   /**

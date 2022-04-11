@@ -1,6 +1,8 @@
 package com.openclassrooms.poseidon.domain;
 
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -41,6 +43,7 @@ public class BidList {
   private String benchmark;
 
   @Column(name = "bidlistdate")
+  @DateTimeFormat
   private Timestamp bidListDate;
 
   @Column(name = "commentary")
@@ -62,12 +65,14 @@ public class BidList {
   private String creationName;
 
   @Column(name = "creationdate")
+  @DateTimeFormat
   private Timestamp creationDate;
 
   @Column(name = "revisionname")
   private String revisionName;
 
   @Column(name = "revisiondate")
+  @DateTimeFormat
   private Timestamp revisionDate;
 
   @Column(name = "dealname")
