@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -20,58 +17,63 @@ import javax.validation.Valid;
 @Controller
 public class BidListController {
 
-    @Autowired
-    private BidListService bidListService;
+  private static final Logger LOGGER = LogManager.getLogger(BidListController.class);
+  @Autowired
+  private BidListService bidListService;
+  @Autowired
+  private BidListRestController bidListRestController;
 
-    @Autowired
-    private BidListRestController bidListRestController;
+  @RequestMapping("/list")
+  public String home(Model model) {
+    LOGGER.info("Fetching /bidList/list...");
+    model.addAttribute("bidLists", bidListRestController.getAll());
+    return "bidList/list";
+  }
 
-    private static final Logger LOGGER = LogManager.getLogger(BidListController.class);
+  @GetMapping("/add")
+  public String addBidForm(BidList bidList) {
+    LOGGER.info("Fetching /bidList/add...");
+    return "bidList/add";
+  }
 
-    @RequestMapping("/list")
-    public String home(Model model)
-    {
-        LOGGER.info("Fetching /bidList/list...");
-
-        model.addAttribute("bidLists", bidListRestController.getAll());
-        return "bidList/list";
+  @PostMapping("/validate")
+  public String validate(@Valid BidList bid, BindingResult result, Model model) {
+    LOGGER.info("Fetching /bidList/validate...");
+    LOGGER.info("Validating entries...");
+    if (!result.hasErrors()) {
+      model.addAttribute("bidLists", bidListRestController.getAll());
+      bidListRestController.create(bid);
+      return "redirect:/bidList/list";
     }
+    return "/bidList/add";
+  }
 
-    @GetMapping("/add")
-    public String addBidForm(BidList bid) {
-        LOGGER.info("Fetching /bidList/add...");
-        return "bidList/add";
+  @GetMapping("/update/{id}")
+  public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
+    LOGGER.info("Fetching threw /bidList/update/" + id);
+    BidList bidList = bidListService.findById(id).orElseThrow(
+      () -> new NullPointerException("No bid found with this id (" + id + ")")
+    );
+    model.addAttribute("bidList", bidList);
+    return "bidList/update";
+  }
+
+  @PostMapping("/update/{id}")
+  public String updateBid(@PathVariable("id") Integer id, @Valid BidList bidList,
+                          BindingResult result, Model model) {
+    LOGGER.info("Updating threw /bidList/update/" + id);
+    if (result.hasErrors()){
+      return "bidlist/update";
     }
+      bidListService.save(bidList);
+      model.addAttribute("bidLists", bidListRestController.getAll());
+      return "redirect:/bidList/list";
+  }
 
-    @PostMapping("/validate")
-    public String validate(@Valid BidList bid, BindingResult result, Model model) {
-        LOGGER.info("Fetching /bidList/validate...");
-        LOGGER.info("Validating entries...");
-
-        // TODO: check data valid and save to db, after saving return bid list
-        return "bidList/add";
-    }
-
-    @GetMapping("/update/{id}")
-    public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        // TODO: get Bid by Id and to model then show to the form
-        return "bidList/update";
-    }
-
-    @PostMapping("/update/{id}")
-    public String updateBid(@PathVariable("id") Integer id, @Valid BidList bidList,
-                             BindingResult result, Model model) {
-        // TODO: check required fields, if valid call service to update Bid and return list Bid
-        return "redirect:/bidList/list";
-    }
-
-    @GetMapping("/delete/{id}")
-    public String deleteBid(@PathVariable("id") Integer id, Model model) {
-          BidList bidListToDelete = bidListService.findById(id)
-          .orElseThrow(() -> new IllegalArgumentException("Invalid bidList Id:" + id));
-
-          bidListRestController.delete(bidListToDelete);
-
-        return "redirect:/bidList/list";
-    }
+  @GetMapping("/delete/{id}")
+  public String deleteBid(@PathVariable("id") Integer id, Model model) {
+    LOGGER.info("Fetching /bidList/delete/" + id);
+    bidListRestController.delete(id);
+    return "redirect:/bidList/list";
+  }
 }

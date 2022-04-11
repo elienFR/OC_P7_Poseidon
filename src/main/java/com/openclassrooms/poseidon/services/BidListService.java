@@ -26,4 +26,8 @@ public class BidListService {
   public Optional<BidList> findById(Integer id) {
     return bidListRepository.findById(id);
   }
+
+  public BidList save(BidList bid) {
+    return bidListRepository.save(bid);
+  }
 }

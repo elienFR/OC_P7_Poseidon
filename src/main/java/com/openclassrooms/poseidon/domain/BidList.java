@@ -3,6 +3,8 @@ package com.openclassrooms.poseidon.domain;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.sql.Timestamp;
 
 @Entity
@@ -22,6 +24,8 @@ public class BidList {
   private String type;
 
   @Column(name = "bidquantity")
+  @NotNull(message = "Bid Quantity must be superior to 0")
+  @Positive(message = "Bid Quantity must be superior to 0")
   private Double bidQuantity;
 
   @Column(name = "askquantity")
@@ -252,5 +256,15 @@ public class BidList {
 
   public void setSide(String side) {
     this.side = side;
+  }
+
+  @Override
+  public String toString() {
+    return "BidList{" +
+      "bidListId=" + bidListId +
+      ", account='" + account + '\'' +
+      ", type='" + type + '\'' +
+      ", bidQuantity=" + bidQuantity +
+      '}';
   }
 }

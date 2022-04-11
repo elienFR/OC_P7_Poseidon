@@ -1,6 +1,7 @@
 package com.openclassrooms.poseidon.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -15,6 +16,9 @@ import javax.sql.DataSource;
 @Configuration
 @EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
+
+  @Value("${api.ver}")
+  private String apiVersion;
 
   @Autowired
   private DataSource dataSource;
@@ -36,18 +40,16 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   public void configure(HttpSecurity httpSecurity) throws Exception {
-    httpSecurity.authorizeRequests()
-      .antMatchers("/css/**").permitAll()
+    httpSecurity
+      .authorizeRequests()
       .antMatchers("/").permitAll()
-      // TODO : Remove /test from all permission
-      .antMatchers("/api/**").permitAll()
-      .antMatchers("/test").permitAll()
-      ///////////////////////////////////////////
+      .antMatchers("/css/**").permitAll()
       .antMatchers("/login").permitAll()
+      // TODO : Remove /test from all permission
+      .antMatchers("/"+ apiVersion +"/**").permitAll()
+      ///////////////////////////////////////////
+      .antMatchers("/**").hasRole("USER")
       .antMatchers("/**").hasRole("ADMIN")
-//      .antMatchers("/admin**").hasRole("ADMIN")
-//      .antMatchers("/bidList/list").hasRole("ADMIN")
-//      .antMatchers("/user**").hasRole("ADMIN")
 
       .anyRequest().authenticated()
 
@@ -71,6 +73,12 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
       .logoutSuccessUrl("/")
       .deleteCookies("JSESSIONID")
       .deleteCookies("remember-me")
+
+      .and()
+      .httpBasic()
+      .and()
+      //TODO : RE ENABLE CSRF PROTECTION
+      .csrf().disable()
     ;
 
   }
