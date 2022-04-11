@@ -2,7 +2,10 @@ package com.openclassrooms.poseidon.domain;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "rating")
@@ -10,13 +13,23 @@ public class Rating {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
-//  @NotBlank(message = "MoodysRating is mandatory")
+
+  @Column(name = "moodysrating")
+  @NotBlank(message = "Moody's rating is mandatory.")
   private String moodysRating;
-//  @NotBlank(message = "SandPRating is mandatory")
+
+  @Column(name = "sandprating")
+  @NotBlank(message = "Standard And Poor's rating is mandatory.")
   private String sandPRating;
-//  @NotBlank(message = "FitchRating is mandatory")
+
+  @Column(name = "fitchrating")
+  @NotBlank(message = "Fitch rating is mandatory.")
   private String fitchRating;
-//  @NotBlank(message = "OrderNumber is mandatory")
+
+  @Column(name = "ordernumber")
+  @NotNull
+  @Min(value = -128,message = "Order number must be upper than -128.")
+  @Max(value=127,message = "Order number must be less than 127.")
   private Integer orderNumber;
 
   public Integer getId() {
@@ -57,5 +70,16 @@ public class Rating {
 
   public void setOrderNumber(Integer orderNumber) {
     this.orderNumber = orderNumber;
+  }
+
+  @Override
+  public String toString() {
+    return "Rating{" +
+      "id=" + id +
+      ", moodysRating='" + moodysRating + '\'' +
+      ", sandPRating='" + sandPRating + '\'' +
+      ", fitchRating='" + fitchRating + '\'' +
+      ", orderNumber=" + orderNumber +
+      '}';
   }
 }

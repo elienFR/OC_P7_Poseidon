@@ -27,6 +27,7 @@ public class CurvePointService {
 
   public CurvePoint save(CurvePoint curvePoint) {
     LOGGER.info("Contacting DB to save curve point...");
+    //In case the saving is a new curve point, then a date is added to its CreationDate attribute
     if (curvePoint.getId() == null) {
       LOGGER.info("Adding CreationDate attributes curvePoint Object...");
       curvePoint.setCreationDate(
@@ -48,7 +49,7 @@ public class CurvePointService {
 
   public CurvePoint update(CurvePoint modifiedCurvePoint, CurvePoint curvePointToUpdate) {
     LOGGER.info("Contacting DB to update curve point...");
-    if(modifiedCurvePoint.getId()!=curvePointToUpdate.getId()){
+    if (modifiedCurvePoint.getId() != curvePointToUpdate.getId()) {
       LOGGER.warn("Your two curve points have different id. Update is not possible !");
       throw new RuntimeException("Curve point ID mismatch.");
     }

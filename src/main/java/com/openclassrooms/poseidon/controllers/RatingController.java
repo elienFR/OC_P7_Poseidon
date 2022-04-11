@@ -1,54 +1,130 @@
 package com.openclassrooms.poseidon.controllers;
 
+import com.openclassrooms.poseidon.controllers.rest.RatingRestController;
+import com.openclassrooms.poseidon.domain.CurvePoint;
 import com.openclassrooms.poseidon.domain.Rating;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 
+/**
+ * This class is the controller in charge of displaying views for everything that concerns
+ * ratings.
+ */
 @Controller
+@RequestMapping("/rating")
 public class RatingController {
-    // TODO: Inject Rating service
 
-    @RequestMapping("/rating/list")
+    private static final Logger LOGGER = LogManager.getLogger(RatingController.class);
+
+    @Autowired
+    private RatingRestController ratingRestController;
+
+    /**
+     * This method is used to display all ratings in a list.
+     *
+     * @param model is the model that display the page correctly.
+     * @return is a string path where to find the view for this controller's method.
+     */
+    @GetMapping("/list")
     public String home(Model model)
     {
-        // TODO: find all Rating, add to model
+        LOGGER.info("Fetching /rating/list...");
+        model.addAttribute("ratings", ratingRestController.getAll());
         return "rating/list";
     }
 
-    @GetMapping("/rating/add")
+    /**
+     * This method is used to add a rating in database.
+     *
+     * @param rating is the curve point Object used to display the page correctly.
+     * @return is a string path where to find the view for this controller's method.
+     */
+    @GetMapping("/add")
     public String addRatingForm(Rating rating) {
+        LOGGER.info("Fetching /rating/add...");
         return "rating/add";
     }
 
-    @PostMapping("/rating/validate")
+    /**
+     * This method is used to validate a new rating before adding it to database.
+     *
+     * @param rating is the rating Object in validation before add.
+     * @param result is the BindingResult object that checks if errors are present in curve point object.
+     * @param model is the model that display the page correctly.
+     * @return is a string path where to find the view for this controller's method.
+     */
+    @PostMapping("/validate")
     public String validate(@Valid Rating rating, BindingResult result, Model model) {
-        // TODO: check data valid and save to db, after saving return Rating list
+        LOGGER.info("Fetching /rating/validate...");
+        LOGGER.info("Validating entries...");
+        if (!result.hasErrors()) {
+            LOGGER.info("Entries validated...");
+            model.addAttribute("ratings", ratingRestController.getAll());
+            ratingRestController.create(rating);
+            return "redirect:/rating/list";
+        }
         return "rating/add";
     }
 
-    @GetMapping("/rating/update/{id}")
+    @GetMapping("/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        // TODO: get Rating by Id and to model then show to the form
+        LOGGER.info("Fetching /rating/update/" + id);
+        Rating rating = ratingRestController.getById(id).orElseThrow(
+          () -> new NullPointerException("No rating found with this id (" + id + ")")
+        );
+        model.addAttribute("rating", rating);
         return "rating/update";
     }
 
-    @PostMapping("/rating/update/{id}")
+    /**
+     * This method is used to validate and update an existing rating into database.
+     *
+     * @param id is the curve point's id  that is supposed to be updated.
+     * @param rating is the rating object to update through this method.
+     * @param result is the BindingResult object that checks if errors are present in bid object.
+     * @param model is the model that display the page correctly.
+     * @return is a string path where to find the view for this controller's method.
+     */
+    @PostMapping("/update/{id}")
+    @Transactional
     public String updateRating(@PathVariable("id") Integer id, @Valid Rating rating,
                              BindingResult result, Model model) {
-        // TODO: check required fields, if valid call service to update Rating and return Rating list
+        LOGGER.info("Updating through /rating/update/" + id);
+        LOGGER.info("Validating entries...");
+        if (result.hasErrors()){
+            return "rating/update";
+        }
+        LOGGER.info("Entries validated...");
+        ratingRestController.update(rating);
+        model.addAttribute("curvePoints", ratingRestController.getAll());
         return "redirect:/rating/list";
     }
 
-    @GetMapping("/rating/delete/{id}")
+    /**
+     * This method is used to delete an existing rating from database.
+     *
+     * @param id is the rating's id that is supposed to be deleted.
+     * @param model is the model that display the page correctly.
+     * @return is a string path where to find the view for this controller's method.
+     */
+    @GetMapping("/delete/{id}")
     public String deleteRating(@PathVariable("id") Integer id, Model model) {
-        // TODO: Find Rating by Id and delete the Rating, return to Rating list
+        LOGGER.info("Fetching /rating/delete/" + id);
+        ratingRestController.delete(id);
         return "redirect:/rating/list";
     }
 }

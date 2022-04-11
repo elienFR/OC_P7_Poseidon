@@ -1,9 +1,8 @@
 package com.openclassrooms.poseidon.controllers.rest;
 
-import com.nimbusds.jose.jwk.Curve;
-import com.openclassrooms.poseidon.domain.BidList;
 import com.openclassrooms.poseidon.domain.CurvePoint;
-import com.openclassrooms.poseidon.services.CurvePointService;
+import com.openclassrooms.poseidon.domain.Rating;
+import com.openclassrooms.poseidon.services.RatingService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,16 +21,18 @@ import java.util.Optional;
 
 /**
  * This class is the REST Controller to communicate with database through JSON files
- * with curve point objects.
+ * with rating objects.
  */
 @RestController
-@RequestMapping("${api.ver}" + "/curvePoint")
-public class CurvePointRestController {
+@RequestMapping("${api.ver}" + "/rating")
+public class RatingRestController {
 
-  private static final Logger LOGGER = LogManager.getLogger(CurvePointRestController.class);
+  private static final Logger LOGGER = LogManager.getLogger(RatingRestController.class);
 
   @Autowired
-  private CurvePointService curvePointService;
+  private RatingService ratingService;
+
+
 
   /**
    * this method is one of the Exception Handler to display specific exceptions from
@@ -84,60 +85,60 @@ public class CurvePointRestController {
   }
 
   /**
-   * This method is used to display all curve point in a list.
+   * This method is used to display all ratings in a list.
    *
-   * @return the iterable of all curve points contained in database.
+   * @return the iterable of all ratings contained in database.
    */
   @GetMapping("/list")
-  public Iterable<CurvePoint> getAll() {
-    LOGGER.info("API Request -> get all curve points...");
-    return curvePointService.getAll();
+  public Iterable<Rating> getAll() {
+    LOGGER.info("API Request -> get all ratings...");
+    return ratingService.getAll();
   }
 
   /**
    * This method is used to add a new curve point into database.
    *
-   * @param curvePoint is the Json body of the curve point you want to add.
+   * @param rating is the Json body of the rating you want to add.
    * @return the confirmation message that you correctly added the bid.
    */
   @PostMapping("/add")
   @Transactional
-  public ResponseEntity<String> create(@Valid @RequestBody CurvePoint curvePoint) {
-    LOGGER.info("API Request -> saving curve point : ");
-    LOGGER.info(curvePoint.toString());
-    CurvePoint savedCurvePoint = curvePointService.save(curvePoint);
-    LOGGER.info("Curve point saved successfully");
-    return ResponseEntity.ok("Successfully created with id : " + savedCurvePoint.getId() + ".");
+  public ResponseEntity<String> create(@Valid @RequestBody Rating rating) {
+    LOGGER.info("API Request -> saving rating : ");
+    LOGGER.info(rating.toString());
+    Rating savedRating = ratingService.save(rating);
+    LOGGER.info("Rating saved successfully");
+    return ResponseEntity.ok("Successfully created with id : " + rating.getId() + ".");
   }
 
   /**
-   * This method is used to recover a specific curve point thanks to its id.
+   * This method is used to recover a specific rating thanks to its id.
    *
-   * @param id is the curve point's id you are looking for.
+   * @param id is the rating's id you are looking for.
    * @return an optional bidList object
    */
   @GetMapping("/list/{id}")
-  public Optional<CurvePoint> getById(@PathVariable Integer id) {
+  public Optional<Rating> getById(@PathVariable Integer id) {
     LOGGER.info("API Request -> get curve point with Id : " + id + "...");
-    return curvePointService.findById(id);
+    return ratingService.findById(id);
   }
 
   /**
-   * This method is used to update an existing curve point from database.
+   * This method is used to update an existing rating from database.
    *
-   * @param curvePoint is the curve point you want to modify.
+   * @param rating is the curve point you want to modify.
    * @return the confirmation message that you correctly updated the bid.
    */
   @PutMapping("/update")
   @Transactional
-  public ResponseEntity<String> update(@Valid @RequestBody CurvePoint curvePoint) {
-    LOGGER.info("API Request -> updating curve point : ");
-    LOGGER.info(curvePoint.toString());
-    CurvePoint curvePointFromDB = curvePointService.findById(curvePoint.getId()).orElseThrow(
-      () -> new NullPointerException("No curve point found with this id (" + curvePoint.getId() + ")")
+  public ResponseEntity<String> update(@Valid @RequestBody Rating rating) {
+    LOGGER.info("API Request -> updating rating : ");
+    LOGGER.info(rating.toString());
+    Rating ratingFromDB = ratingService.findById(rating.getId()).orElseThrow(
+      () -> new NullPointerException("No rating found with this id (" + rating.getId() + ")")
     );
-    curvePointService.update(curvePoint, curvePointFromDB);
-    LOGGER.info("Curve point updated successfully !");
+    ratingService.update(rating, ratingFromDB);
+    LOGGER.info("rating updated successfully !");
     return ResponseEntity.ok("Curve point successfully updated !");
   }
 
@@ -150,10 +151,10 @@ public class CurvePointRestController {
   @DeleteMapping("/delete")
   @Transactional
   public ResponseEntity<String> delete(@RequestParam Integer id) {
-    LOGGER.info("API Request -> deleting curve point with id : " + id);
-    CurvePoint curvePointToDelete = curvePointService.findById(id)
+    LOGGER.info("API Request -> deleting rating with id : " + id);
+    Rating ratingToDelete = ratingService.findById(id)
       .orElseThrow(() -> new NullPointerException("No curve point with id " + id + " exists in DB."));
-    curvePointService.delete(curvePointToDelete);
-    return ResponseEntity.ok("Curve point with id " + id + " has been deleted successfully.");
+    ratingService.delete(ratingToDelete);
+    return ResponseEntity.ok("Rating with id " + id + " has been deleted successfully.");
   }
 }

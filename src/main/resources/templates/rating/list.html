@@ -3,7 +3,7 @@
 	  xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="utf-8"/>
-<title>Home</title>
+<title>Rating - List</title>
 <link rel="stylesheet" href="../../css/bootstrap.min.css" >
 </head>
 <body>
@@ -38,7 +38,40 @@
 				</tr>
 			</thead>
 			<tbody>
-			<!-- TODO: Show all Rating to the table, the Action column will have Edit & Delete buttons -->
+			<tr th:if="${ratings.empty}">
+				<td colspan="6" th:text="#{ratings.noRatingsList}">No rating made yet !</td>
+			</tr>
+			<tr th:each="rating : ${ratings}">
+				<td>
+                        <span th:text="${rating.id}">
+                            Id
+                        </span>
+				</td>
+				<td>
+                        <span th:text="${rating.moodysRating}">
+                            MoodysRating
+                        </span>
+				</td>
+				<td>
+                        <span th:text="${rating.sandPRating}">
+                            SandPRating
+                        </span>
+				</td>
+				<td>
+                        <span th:text="${rating.fitchRating}">
+                            FitchRating
+                        </span>
+				</td>
+				<td>
+                        <span th:text="${rating.orderNumber}">
+                            Order
+                        </span>
+				</td>
+				<td style="width: 15%" class="text-center">
+					<a th:href="@{/rating/update/{id}(id=${rating.id})}">Edit</a>&nbsp;|&nbsp;
+					<a th:href="@{/rating/delete/{id}(id=${rating.id})}">Delete</a>
+				</td>
+			</tr>
 			</tbody>
 		</table>
 	</div>

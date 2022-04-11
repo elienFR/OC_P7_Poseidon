@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 /**
@@ -29,7 +30,7 @@ public class BidListController {
    * @param model is the model that display the page correctly.
    * @return is a string path where to find the view for this controller's method.
    */
-  @RequestMapping("/list")
+  @GetMapping("/list")
   public String home(Model model) {
     LOGGER.info("Fetching /bidList/list...");
     model.addAttribute("bidLists", bidListRestController.getAll());
@@ -57,10 +58,12 @@ public class BidListController {
    * @return is a string path where to find the view for this controller's method.
    */
   @PostMapping("/validate")
+  @Transactional
   public String validate(@Valid BidList bid, BindingResult result, Model model) {
     LOGGER.info("Fetching /bidList/validate...");
     LOGGER.info("Validating entries...");
     if (!result.hasErrors()) {
+      LOGGER.info("Entries validated...");
       model.addAttribute("bidLists", bidListRestController.getAll());
       bidListRestController.create(bid);
       return "redirect:/bidList/list";
@@ -95,13 +98,16 @@ public class BidListController {
    * @return is a string path where to find the view for this controller's method.
    */
   @PostMapping("/update/{id}")
+  @Transactional
   public String updateBid(@PathVariable("id") Integer id, @Valid BidList bidList,
                           BindingResult result, Model model) {
     LOGGER.info("Updating through /bidList/update/" + id);
+    LOGGER.info("Validating entries...");
     if (result.hasErrors()){
       return "bidlist/update";
     }
-      bidListRestController.update(bidList);
+    LOGGER.info("Entries validated...");
+    bidListRestController.update(bidList);
       model.addAttribute("bidLists", bidListRestController.getAll());
       return "redirect:/bidList/list";
   }
@@ -114,6 +120,7 @@ public class BidListController {
    * @return is a string path where to find the view for this controller's method.
    */
   @GetMapping("/delete/{id}")
+  @Transactional
   public String deleteBid(@PathVariable("id") Integer id, Model model) {
     LOGGER.info("Fetching /bidList/delete/" + id);
     bidListRestController.delete(id);

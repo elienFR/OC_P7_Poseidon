@@ -1,7 +1,6 @@
 package com.openclassrooms.poseidon.services;
 
 import com.openclassrooms.poseidon.domain.BidList;
-import com.openclassrooms.poseidon.domain.CurvePoint;
 import com.openclassrooms.poseidon.repositories.BidListRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
