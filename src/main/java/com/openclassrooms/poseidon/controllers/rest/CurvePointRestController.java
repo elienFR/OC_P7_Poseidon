@@ -134,11 +134,11 @@ public class CurvePointRestController {
   public ResponseEntity<String> update(@RequestBody CurvePoint curvePoint) {
     LOGGER.info("API Request -> updating curve point : ");
     LOGGER.info(curvePoint.toString());
-    curvePointService.findById(curvePoint.getId()).orElseThrow(
+    CurvePoint curvePointFromDB = curvePointService.findById(curvePoint.getId()).orElseThrow(
       () -> new NullPointerException("No curve point found with this id (" + curvePoint.getId() + ")")
     );
     LOGGER.info("bid updated successfully");
-    curvePointService.save(curvePoint);
+    curvePointService.update(curvePoint, curvePointFromDB);
     return ResponseEntity.ok("Curve point successfully updated !");
   }
 

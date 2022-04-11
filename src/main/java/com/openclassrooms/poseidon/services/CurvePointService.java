@@ -7,6 +7,9 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 @Service
@@ -24,6 +27,12 @@ public class CurvePointService {
 
   public CurvePoint save(CurvePoint curvePoint) {
     LOGGER.info("Contacting DB to save curve point...");
+    if (curvePoint.getId() == null) {
+      LOGGER.info("Adding CreationDate attributes curvePoint Object...");
+      curvePoint.setCreationDate(
+        Timestamp.valueOf(LocalDateTime.now())
+      );
+    }
     return curvePointRepository.save(curvePoint);
   }
 
@@ -35,5 +44,18 @@ public class CurvePointService {
   public void delete(CurvePoint curvePointToDelete) {
     LOGGER.info("Contacting DB to delete curve point : " + curvePointToDelete.toString());
     curvePointRepository.delete(curvePointToDelete);
+  }
+
+  public CurvePoint update(CurvePoint modifiedCurvePoint, CurvePoint curvePointToUpdate) {
+    LOGGER.info("Contacting DB to update curve point...");
+    if(modifiedCurvePoint.getId()!=curvePointToUpdate.getId()){
+      LOGGER.warn("Your two curve points have different id. Update is not possible !");
+      throw new RuntimeException("Curve point ID mismatch.");
+    }
+    //we only set parameters accessible from html form
+    curvePointToUpdate.setCurveId(modifiedCurvePoint.getCurveId());
+    curvePointToUpdate.setTerm(modifiedCurvePoint.getTerm());
+    curvePointToUpdate.setValue(modifiedCurvePoint.getValue());
+    return curvePointRepository.save(curvePointToUpdate);
   }
 }

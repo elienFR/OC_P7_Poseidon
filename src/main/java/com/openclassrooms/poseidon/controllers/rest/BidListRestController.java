@@ -148,11 +148,11 @@ public class BidListRestController {
   public ResponseEntity<String> update(@Valid @RequestBody BidList bid) {
     LOGGER.info("API Request -> updating bid : ");
     LOGGER.info(bid.toString());
-    bidListService.findById(bid.getBidListId()).orElseThrow(
+    BidList bidListFromDb = bidListService.findById(bid.getBidListId()).orElseThrow(
       () -> new NullPointerException("No bid found with this id (" + bid.getBidListId() + ")")
     );
     LOGGER.info("bid updated successfully");
-    bidListService.save(bid);
+    bidListService.update(bid,bidListFromDb);
     return ResponseEntity.ok("Bid successfully updated !");
   }
 }
