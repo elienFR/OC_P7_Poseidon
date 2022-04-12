@@ -5,7 +5,9 @@ import com.openclassrooms.poseidon.repositories.BidListRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
@@ -37,6 +39,11 @@ public class BidListService {
 
   public BidList save(BidList bid) {
     LOGGER.info("Contacting DB to save bid...");
+    if (bid.getBidListId() != null) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+        "Forbidden to save a bid with specific id",
+        new IllegalArgumentException("Forbidden to save a bid with specific id"));
+    }
     //In case the saving is a new bid, then a date is added to its CreationDate attribute
     if (bid.getBidListId() == null) {
       LOGGER.info("Adding CreationDate attributes bid Object...");
@@ -49,7 +56,7 @@ public class BidListService {
 
   public BidList update(BidList modifiedBidList, BidList bidListToUpdate) {
     LOGGER.info("Contacting DB to update curve point...");
-    if(modifiedBidList.getBidListId()!=bidListToUpdate.getBidListId()){
+    if (modifiedBidList.getBidListId() != bidListToUpdate.getBidListId()) {
       LOGGER.warn("Your two bids have different id. Update is not possible !");
       throw new RuntimeException("Bid's ID mismatch.");
     }

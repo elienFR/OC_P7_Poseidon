@@ -5,11 +5,12 @@ import com.openclassrooms.poseidon.repositories.CurvePointRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 @Service
@@ -27,6 +28,11 @@ public class CurvePointService {
 
   public CurvePoint save(CurvePoint curvePoint) {
     LOGGER.info("Contacting DB to save curve point...");
+    if (curvePoint.getId() != null) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+        "Forbidden to save a curve point with specific id",
+        new IllegalArgumentException("Forbidden to save a curve point with specific id"));
+    }
     //In case the saving is a new curve point, then a date is added to its CreationDate attribute
     if (curvePoint.getId() == null) {
       LOGGER.info("Adding CreationDate attributes curvePoint Object...");

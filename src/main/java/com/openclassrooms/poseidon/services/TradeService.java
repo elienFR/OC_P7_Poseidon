@@ -5,7 +5,9 @@ import com.openclassrooms.poseidon.repositories.TradeRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
@@ -29,6 +31,11 @@ public class TradeService {
   public Trade save(Trade trade) {
     LOGGER.info("Contacting DB to save trade...");
     //In case the saving is a new trade, then a date is added to its CreationDate attribute
+    if (trade.getTradeId() != null) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+        "Forbidden to save a curve point with specific id",
+        new IllegalArgumentException("Forbidden to save a curve point with specific id"));
+    }
     if (trade.getTradeId() == null) {
       LOGGER.info("Adding CreationDate attributes curvePoint Object...");
       trade.setCreationDate(
