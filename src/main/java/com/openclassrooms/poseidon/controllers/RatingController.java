@@ -1,24 +1,19 @@
 package com.openclassrooms.poseidon.controllers;
 
 import com.openclassrooms.poseidon.controllers.rest.RatingRestController;
-import com.openclassrooms.poseidon.domain.CurvePoint;
 import com.openclassrooms.poseidon.domain.Rating;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.converter.HttpMessageNotReadableException;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * This class is the controller in charge of displaying views for everything that concerns
@@ -68,6 +63,7 @@ public class RatingController {
      * @return is a string path where to find the view for this controller's method.
      */
     @PostMapping("/validate")
+    @Transactional
     public String validate(@Valid Rating rating, BindingResult result, Model model) {
         LOGGER.info("Fetching /rating/validate...");
         LOGGER.info("Validating entries...");
@@ -80,6 +76,13 @@ public class RatingController {
         return "rating/add";
     }
 
+    /**
+     * This method is used to display the update page of an existing rating before updating it to database.
+     *
+     * @param id is the rating's id that is supposed to be updated.
+     * @param model is the model that display the page correctly.
+     * @return is a string path where to find the view for this controller's method.
+     */
     @GetMapping("/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         LOGGER.info("Fetching /rating/update/" + id);
@@ -93,9 +96,9 @@ public class RatingController {
     /**
      * This method is used to validate and update an existing rating into database.
      *
-     * @param id is the curve point's id  that is supposed to be updated.
+     * @param id is the rating's id  that is supposed to be updated.
      * @param rating is the rating object to update through this method.
-     * @param result is the BindingResult object that checks if errors are present in bid object.
+     * @param result is the BindingResult object that checks if errors are present in rating object.
      * @param model is the model that display the page correctly.
      * @return is a string path where to find the view for this controller's method.
      */
