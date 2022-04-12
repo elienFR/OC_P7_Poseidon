@@ -33,19 +33,16 @@ public class Trade {
 
   @Column(name = "sellquantity")
   @NumberFormat
-  @NotNull(message = "Sell quantity must be superior to 0")
   @Positive(message = "Sell quantity must be superior to 0")
   private Double sellQuantity;
 
   @Column(name = "buyprice")
   @NumberFormat
-  @NotNull(message = "Buy Price must be superior to 0")
   @Positive(message = "Buy Price must be superior to 0")
   private Double buyPrice;
 
   @Column(name = "sellprice")
   @NumberFormat
-  @NotNull(message = "Sell Price must be superior to 0")
   @Positive(message = "Sell Price must be superior to 0")
   private Double sellPrice;
 

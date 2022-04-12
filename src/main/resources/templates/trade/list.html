@@ -38,7 +38,7 @@
 			</thead>
 			<tbody>
 				<tr th:if="${trades.empty}">
-					<td colspan="5" th:text="#{trades.noRule}">No trade made yet !</td>
+					<td colspan="5" th:text="#{trades.noTrade}">No trade made yet !</td>
 				</tr>
 				<tr th:each="trade : ${trades}">
 					<td>
@@ -63,8 +63,8 @@
 					</td>
 
 					<td style="width: 15%" class="text-center">
-						<a th:href="@{/trade/update/{id}(id=${trade.id})}">Edit</a>&nbsp;|&nbsp;
-						<a th:href="@{/trade/delete/{id}(id=${trade.id})}">Delete</a>
+						<a th:href="@{/trade/update/{id}(id=${trade.tradeId})}">Edit</a>&nbsp;|&nbsp;
+						<a th:href="@{/trade/delete/{id}(id=${trade.tradeId})}">Delete</a>
 					</td>
 				</tr>
 			</tbody>
