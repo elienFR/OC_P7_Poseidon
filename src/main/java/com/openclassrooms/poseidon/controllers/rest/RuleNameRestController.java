@@ -85,6 +85,12 @@ public class RuleNameRestController {
     return ex.getLocalizedMessage();
   }
 
+  /**
+   * This method is used to display all rule names in a list.
+   *
+   * @return the iterable of all rule names contained in database.
+   */
+  @GetMapping("/list")
   public Iterable<RuleName> getAll() {
     LOGGER.info("API Request -> get all rule names...");
     return ruleNameService.getAll();
