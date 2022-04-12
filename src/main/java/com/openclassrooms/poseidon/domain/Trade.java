@@ -1,7 +1,12 @@
 package com.openclassrooms.poseidon.domain;
 
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.NumberFormat;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.sql.Timestamp;
 
 @Entity
@@ -9,46 +14,84 @@ import java.sql.Timestamp;
 public class Trade {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "tradeid")
   private Integer tradeId;
+
+  @Column(name = "account")
   @NotBlank(message = "Account is mandatory")
   private String account;
+
+  @Column(name = "type")
   @NotBlank(message = "type is mandatory")
   private String type;
 
+  @Column(name = "buyquantity")
+  @NotNull(message = "Buy Quantity must be superior to 0")
+  @NumberFormat
+  @Positive(message = "Buy Quantity must be superior to 0")
   private Double buyQuantity;
 
+  @Column(name = "sellquantity")
+  @NumberFormat
+  @NotNull(message = "Sell quantity must be superior to 0")
+  @Positive(message = "Sell quantity must be superior to 0")
   private Double sellQuantity;
 
+  @Column(name = "buyprice")
+  @NumberFormat
+  @NotNull(message = "Buy Price must be superior to 0")
+  @Positive(message = "Buy Price must be superior to 0")
   private Double buyPrice;
 
+  @Column(name = "sellprice")
+  @NumberFormat
+  @NotNull(message = "Sell Price must be superior to 0")
+  @Positive(message = "Sell Price must be superior to 0")
   private Double sellPrice;
 
+  @Column(name = "benchmark")
   private String benchmark;
 
+  @Column(name = "tradedate")
+  @DateTimeFormat
   private Timestamp tradeDate;
 
+  @Column(name = "security")
   private String security;
 
+  @Column(name = "status")
   private String status;
 
+  @Column(name = "trader")
   private String trader;
 
+  @Column(name = "book")
   private String book;
 
+  @Column(name = "creationname")
   private String creationName;
 
+  @Column(name = "creationdate")
+  @DateTimeFormat
   private Timestamp creationDate;
 
+  @Column(name = "revisionname")
   private String revisionName;
 
+  @Column(name = "revisiondate")
+  @DateTimeFormat
   private Timestamp revisionDate;
 
+  @Column(name = "dealname")
   private String dealName;
 
+  @Column(name = "dealtype")
   private String dealType;
 
+  @Column(name = "sourcelistid")
   private String sourceListId;
 
+  @Column(name = "side")
   private String side;
 
   public Integer getTradeId() {
@@ -217,5 +260,15 @@ public class Trade {
 
   public void setSide(String side) {
     this.side = side;
+  }
+
+  @Override
+  public String toString() {
+    return "Trade{" +
+      "tradeId=" + tradeId +
+      ", account='" + account + '\'' +
+      ", type='" + type + '\'' +
+      ", buyQuantity=" + buyQuantity +
+      '}';
   }
 }
