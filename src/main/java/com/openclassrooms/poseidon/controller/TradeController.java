@@ -1,6 +1,6 @@
-package com.openclassrooms.poseidon.controllers;
+package com.openclassrooms.poseidon.controller;
 
-import com.openclassrooms.poseidon.controllers.rest.TradeRestController;
+import com.openclassrooms.poseidon.controller.rest.TradeRestController;
 import com.openclassrooms.poseidon.domain.Trade;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

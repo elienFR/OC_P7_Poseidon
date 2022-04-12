@@ -1,7 +1,7 @@
-package com.openclassrooms.poseidon.controllers.rest;
+package com.openclassrooms.poseidon.controller.rest;
 
 import com.openclassrooms.poseidon.domain.BidList;
-import com.openclassrooms.poseidon.services.BidListService;
+import com.openclassrooms.poseidon.service.BidListService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +17,6 @@ import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 /**
  * This class is the REST Controller to communicate with database through JSON files

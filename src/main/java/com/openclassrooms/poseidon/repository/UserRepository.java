@@ -1,4 +1,4 @@
-package com.openclassrooms.poseidon.repositories;
+package com.openclassrooms.poseidon.repository;
 
 import com.openclassrooms.poseidon.domain.User;
 import org.springframework.data.repository.CrudRepository;

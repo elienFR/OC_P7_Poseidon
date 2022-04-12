@@ -1,7 +1,7 @@
-package com.openclassrooms.poseidon.services;
+package com.openclassrooms.poseidon.service;
 
 import com.openclassrooms.poseidon.domain.Rating;
-import com.openclassrooms.poseidon.repositories.RatingRepository;
+import com.openclassrooms.poseidon.repository.RatingRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

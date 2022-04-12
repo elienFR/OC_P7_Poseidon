@@ -1,7 +1,7 @@
-package com.openclassrooms.poseidon.controllers.rest;
+package com.openclassrooms.poseidon.controller.rest;
 
-import com.openclassrooms.poseidon.domain.Rating;
-import com.openclassrooms.poseidon.services.RatingService;
+import com.openclassrooms.poseidon.domain.Trade;
+import com.openclassrooms.poseidon.service.TradeService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,16 +20,17 @@ import java.util.Optional;
 
 /**
  * This class is the REST Controller to communicate with database through JSON files
- * with rating objects.
+ * with trade objects.
  */
 @RestController
-@RequestMapping("${api.ver}" + "/rating")
-public class RatingRestController {
+@RequestMapping("${api.ver}" + "/trade")
+public class TradeRestController {
 
-  private static final Logger LOGGER = LogManager.getLogger(RatingRestController.class);
+  private static final Logger LOGGER = LogManager.getLogger(TradeRestController.class);
 
   @Autowired
-  private RatingService ratingService;
+  private TradeService tradeService;
+
 
   /**
    * this method is one of the Exception Handler to display specific exceptions from
@@ -82,76 +83,76 @@ public class RatingRestController {
   }
 
   /**
-   * This method is used to display all ratings in a list.
+   * This method is used to display all trades in a list.
    *
-   * @return the iterable of all ratings contained in database.
+   * @return the iterable of all trades contained in database.
    */
   @GetMapping("/list")
-  public Iterable<Rating> getAll() {
-    LOGGER.info("API Request -> get all ratings...");
-    return ratingService.getAll();
+  public Iterable<Trade> getAll() {
+    LOGGER.info("API Request -> get all trades...");
+    return tradeService.getAll();
   }
 
   /**
-   * This method is used to add a new curve point into database.
+   * This method is used to add a new trade into database.
    *
-   * @param rating is the Json body of the rating you want to add.
-   * @return the confirmation message that you correctly added the rating.
+   * @param trade is the Json body of the trade you want to add.
+   * @return the confirmation message that you correctly added the bid.
    */
   @PostMapping("/add")
   @Transactional
-  public ResponseEntity<String> create(@Valid @RequestBody Rating rating) {
-    LOGGER.info("API Request -> saving rating : ");
-    LOGGER.info(rating.toString());
-    Rating savedRating = ratingService.save(rating);
-    LOGGER.info("Rating saved successfully");
-    return ResponseEntity.ok("Successfully created with id : " + savedRating.getId() + ".");
+  public ResponseEntity<String> create(@Valid @RequestBody Trade trade) {
+    LOGGER.info("API Request -> saving trade : ");
+    LOGGER.info(trade.toString());
+    Trade savedTrade = tradeService.save(trade);
+    LOGGER.info("Trade saved successfully");
+    return ResponseEntity.ok("Successfully created with id : " + savedTrade.getTradeId() + ".");
   }
 
   /**
-   * This method is used to recover a specific rating thanks to its id.
+   * This method is used to recover a specific trade thanks to its id.
    *
-   * @param id is the rating's id you are looking for.
-   * @return an optional rating object
+   * @param id is the trade's id you are looking for.
+   * @return an optional trade object
    */
   @GetMapping("/list/{id}")
-  public Optional<Rating> getById(@PathVariable Integer id) {
-    LOGGER.info("API Request -> get curve point with Id : " + id + "...");
-    return ratingService.findById(id);
+  public Optional<Trade> getById(@PathVariable Integer id) {
+    LOGGER.info("API Request -> get trade with Id : " + id + "...");
+    return tradeService.findById(id);
   }
 
   /**
-   * This method is used to update an existing rating from database.
+   * This method is used to update an existing trade from database.
    *
-   * @param rating is the curve point you want to modify.
-   * @return the confirmation message that you correctly updated the rating.
+   * @param trade is the curve point you want to modify.
+   * @return the confirmation message that you correctly updated the trade.
    */
   @PutMapping("/update")
   @Transactional
-  public ResponseEntity<String> update(@Valid @RequestBody Rating rating) {
-    LOGGER.info("API Request -> updating rating : ");
-    LOGGER.info(rating.toString());
-    Rating ratingFromDB = ratingService.findById(rating.getId()).orElseThrow(
-      () -> new NullPointerException("No rating found with this id (" + rating.getId() + ")")
+  public ResponseEntity<String> update(@Valid @RequestBody Trade trade) {
+    LOGGER.info("API Request -> updating trade : ");
+    LOGGER.info(trade.toString());
+    Trade tradeFromDB = tradeService.findById(trade.getTradeId()).orElseThrow(
+      () -> new NullPointerException("No trade found with this id (" + trade.getTradeId() + ")")
     );
-    ratingService.update(rating, ratingFromDB);
-    LOGGER.info("Rating updated successfully !");
-    return ResponseEntity.ok("Rating successfully updated !");
+    tradeService.update(trade, tradeFromDB);
+    LOGGER.info("Trade updated successfully !");
+    return ResponseEntity.ok("Trade successfully updated !");
   }
 
   /**
-   * This method is used to delete a curve point from database.
+   * This method is used to delete a trade from database.
    *
-   * @param id is the id of the curve point you want to delete.
+   * @param id is the id of the trade you want to delete.
    * @return the confirmation message of deletion.
    */
   @DeleteMapping("/delete")
   @Transactional
   public ResponseEntity<String> delete(@RequestParam Integer id) {
-    LOGGER.info("API Request -> deleting rating with id : " + id);
-    Rating ratingToDelete = ratingService.findById(id)
-      .orElseThrow(() -> new NullPointerException("No curve point with id " + id + " exists in DB."));
-    ratingService.delete(ratingToDelete);
-    return ResponseEntity.ok("Rating with id " + id + " has been deleted successfully.");
+    LOGGER.info("API Request -> deleting trade with id : " + id);
+    Trade tradeToDelete = tradeService.findById(id)
+      .orElseThrow(() -> new NullPointerException("No trade with id " + id + " exists in DB."));
+    tradeService.delete(tradeToDelete);
+    return ResponseEntity.ok("Trade with id " + id + " has been deleted successfully.");
   }
 }

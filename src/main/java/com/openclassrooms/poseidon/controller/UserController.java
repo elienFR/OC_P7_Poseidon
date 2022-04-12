@@ -1,8 +1,8 @@
-package com.openclassrooms.poseidon.controllers;
+package com.openclassrooms.poseidon.controller;
 
 import com.openclassrooms.poseidon.configuration.SpringSecurityConfig;
 import com.openclassrooms.poseidon.domain.User;
-import com.openclassrooms.poseidon.repositories.UserRepository;
+import com.openclassrooms.poseidon.repository.UserRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

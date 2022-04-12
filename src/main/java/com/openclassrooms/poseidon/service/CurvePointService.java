@@ -1,7 +1,7 @@
-package com.openclassrooms.poseidon.services;
+package com.openclassrooms.poseidon.service;
 
 import com.openclassrooms.poseidon.domain.CurvePoint;
-import com.openclassrooms.poseidon.repositories.CurvePointRepository;
+import com.openclassrooms.poseidon.repository.CurvePointRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,9 +1,7 @@
-package com.openclassrooms.poseidon.controllers.rest;
+package com.openclassrooms.poseidon.controller.rest;
 
-import com.nimbusds.jose.jwk.Curve;
-import com.openclassrooms.poseidon.domain.BidList;
 import com.openclassrooms.poseidon.domain.CurvePoint;
-import com.openclassrooms.poseidon.services.CurvePointService;
+import com.openclassrooms.poseidon.service.CurvePointService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

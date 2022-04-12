@@ -1,7 +1,7 @@
-package com.openclassrooms.poseidon.services;
+package com.openclassrooms.poseidon.service;
 
 import com.openclassrooms.poseidon.domain.BidList;
-import com.openclassrooms.poseidon.repositories.BidListRepository;
+import com.openclassrooms.poseidon.repository.BidListRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

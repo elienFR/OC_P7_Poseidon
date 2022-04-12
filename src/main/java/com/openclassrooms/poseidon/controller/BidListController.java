@@ -1,6 +1,6 @@
-package com.openclassrooms.poseidon.controllers;
+package com.openclassrooms.poseidon.controller;
 
-import com.openclassrooms.poseidon.controllers.rest.BidListRestController;
+import com.openclassrooms.poseidon.controller.rest.BidListRestController;
 import com.openclassrooms.poseidon.domain.BidList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.security.Principal;
 
 /**
  * This class is the controller in charge of displaying views for everything that concerns bids.
@@ -31,7 +32,7 @@ public class BidListController {
    * @return is a string path where to find the view for this controller's method.
    */
   @GetMapping("/list")
-  public String home(Model model) {
+  public String home(Principal principal, Model model) {
     LOGGER.info("Fetching /bidList/list...");
     model.addAttribute("bidLists", bidListRestController.getAll());
     return "bidList/list";

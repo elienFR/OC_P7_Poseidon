@@ -1,7 +1,7 @@
-package com.openclassrooms.poseidon.controllers.rest;
+package com.openclassrooms.poseidon.controller.rest;
 
-import com.openclassrooms.poseidon.domain.Trade;
-import com.openclassrooms.poseidon.services.TradeService;
+import com.openclassrooms.poseidon.domain.RuleName;
+import com.openclassrooms.poseidon.service.RuleNameService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,17 +20,16 @@ import java.util.Optional;
 
 /**
  * This class is the REST Controller to communicate with database through JSON files
- * with trade objects.
+ * with rule name objects.
  */
 @RestController
-@RequestMapping("${api.ver}" + "/trade")
-public class TradeRestController {
+@RequestMapping("${api.ver}" + "/ruleName")
+public class RuleNameRestController {
 
-  private static final Logger LOGGER = LogManager.getLogger(TradeRestController.class);
+  private static final Logger LOGGER = LogManager.getLogger(RuleNameRestController.class);
 
   @Autowired
-  private TradeService tradeService;
-
+  private RuleNameService ruleNameService;
 
   /**
    * this method is one of the Exception Handler to display specific exceptions from
@@ -83,76 +82,77 @@ public class TradeRestController {
   }
 
   /**
-   * This method is used to display all trades in a list.
+   * This method is used to display all rule names in a list.
    *
-   * @return the iterable of all trades contained in database.
+   * @return the iterable of all rule names contained in database.
    */
   @GetMapping("/list")
-  public Iterable<Trade> getAll() {
-    LOGGER.info("API Request -> get all trades...");
-    return tradeService.getAll();
+  public Iterable<RuleName> getAll() {
+    LOGGER.info("API Request -> get all rule names...");
+    return ruleNameService.getAll();
   }
 
   /**
-   * This method is used to add a new trade into database.
+   * This method is used to add a new rule name point into database.
    *
-   * @param trade is the Json body of the trade you want to add.
-   * @return the confirmation message that you correctly added the bid.
+   * @param ruleName is the Json body of the rule name you want to add.
+   * @return the confirmation message that you correctly added the rule name.
    */
   @PostMapping("/add")
   @Transactional
-  public ResponseEntity<String> create(@Valid @RequestBody Trade trade) {
-    LOGGER.info("API Request -> saving trade : ");
-    LOGGER.info(trade.toString());
-    Trade savedTrade = tradeService.save(trade);
-    LOGGER.info("Trade saved successfully");
-    return ResponseEntity.ok("Successfully created with id : " + savedTrade.getTradeId() + ".");
+  public ResponseEntity<String> create(@Valid @RequestBody RuleName ruleName) {
+    LOGGER.info("API Request -> saving rule name : ");
+    LOGGER.info(ruleName.toString());
+    RuleName savedRuleName = ruleNameService.save(ruleName);
+    LOGGER.info("Rating saved successfully");
+    return ResponseEntity.ok("Successfully created with id : " + savedRuleName.getId() + ".");
+
   }
 
   /**
-   * This method is used to recover a specific trade thanks to its id.
+   * This method is used to recover a specific rule name thanks to its id.
    *
-   * @param id is the trade's id you are looking for.
-   * @return an optional trade object
+   * @param id is the rule name's id you are looking for.
+   * @return an optional rule name object
    */
   @GetMapping("/list/{id}")
-  public Optional<Trade> getById(@PathVariable Integer id) {
-    LOGGER.info("API Request -> get trade with Id : " + id + "...");
-    return tradeService.findById(id);
+  public Optional<RuleName> getById(@PathVariable Integer id) {
+    LOGGER.info("API Request -> get rule name with Id : " + id + "...");
+    return ruleNameService.findById(id);
   }
 
   /**
-   * This method is used to update an existing trade from database.
+   * This method is used to update an existing rule name from database.
    *
-   * @param trade is the curve point you want to modify.
-   * @return the confirmation message that you correctly updated the trade.
+   * @param ruleName is the curve point you want to modify.
+   * @return the confirmation message that you correctly updated the rule name.
    */
   @PutMapping("/update")
   @Transactional
-  public ResponseEntity<String> update(@Valid @RequestBody Trade trade) {
-    LOGGER.info("API Request -> updating trade : ");
-    LOGGER.info(trade.toString());
-    Trade tradeFromDB = tradeService.findById(trade.getTradeId()).orElseThrow(
-      () -> new NullPointerException("No trade found with this id (" + trade.getTradeId() + ")")
+  public ResponseEntity<String> update(@Valid @RequestBody RuleName ruleName) {
+    LOGGER.info("API Request -> updating rule name : ");
+    LOGGER.info(ruleName.toString());
+    RuleName ruleNameFromDB = ruleNameService.findById(ruleName.getId()).orElseThrow(
+      () -> new NullPointerException("No rule name found with this id (" + ruleName.getId() + ")")
     );
-    tradeService.update(trade, tradeFromDB);
-    LOGGER.info("Trade updated successfully !");
-    return ResponseEntity.ok("Trade successfully updated !");
+    ruleNameService.update(ruleName, ruleNameFromDB);
+    LOGGER.info("Rule name updated successfully !");
+    return ResponseEntity.ok("Rule name successfully updated !");
   }
 
   /**
-   * This method is used to delete a trade from database.
+   * This method is used to delete a rule name from database.
    *
-   * @param id is the id of the trade you want to delete.
+   * @param id is the id of the rule name you want to delete.
    * @return the confirmation message of deletion.
    */
   @DeleteMapping("/delete")
   @Transactional
   public ResponseEntity<String> delete(@RequestParam Integer id) {
-    LOGGER.info("API Request -> deleting trade with id : " + id);
-    Trade tradeToDelete = tradeService.findById(id)
-      .orElseThrow(() -> new NullPointerException("No trade with id " + id + " exists in DB."));
-    tradeService.delete(tradeToDelete);
-    return ResponseEntity.ok("Trade with id " + id + " has been deleted successfully.");
+    LOGGER.info("API Request -> deleting rule name with id : " + id);
+    RuleName ruleNameToDelete = ruleNameService.findById(id)
+      .orElseThrow(() -> new NullPointerException("No rule name with id " + id + " exists in DB."));
+    ruleNameService.delete(ruleNameToDelete);
+    return ResponseEntity.ok("Rule name with id " + id + " has been deleted successfully.");
   }
 }

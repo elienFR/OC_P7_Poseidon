@@ -1,7 +1,7 @@
-package com.openclassrooms.poseidon.services;
+package com.openclassrooms.poseidon.service;
 
 import com.openclassrooms.poseidon.domain.Trade;
-import com.openclassrooms.poseidon.repositories.TradeRepository;
+import com.openclassrooms.poseidon.repository.TradeRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

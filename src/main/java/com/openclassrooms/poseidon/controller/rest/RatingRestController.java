@@ -1,7 +1,7 @@
-package com.openclassrooms.poseidon.controllers.rest;
+package com.openclassrooms.poseidon.controller.rest;
 
-import com.openclassrooms.poseidon.domain.RuleName;
-import com.openclassrooms.poseidon.services.RuleNameService;
+import com.openclassrooms.poseidon.domain.Rating;
+import com.openclassrooms.poseidon.service.RatingService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,16 +20,16 @@ import java.util.Optional;
 
 /**
  * This class is the REST Controller to communicate with database through JSON files
- * with rule name objects.
+ * with rating objects.
  */
 @RestController
-@RequestMapping("${api.ver}" + "/ruleName")
-public class RuleNameRestController {
+@RequestMapping("${api.ver}" + "/rating")
+public class RatingRestController {
 
-  private static final Logger LOGGER = LogManager.getLogger(RuleNameRestController.class);
+  private static final Logger LOGGER = LogManager.getLogger(RatingRestController.class);
 
   @Autowired
-  private RuleNameService ruleNameService;
+  private RatingService ratingService;
 
   /**
    * this method is one of the Exception Handler to display specific exceptions from
@@ -82,77 +82,76 @@ public class RuleNameRestController {
   }
 
   /**
-   * This method is used to display all rule names in a list.
+   * This method is used to display all ratings in a list.
    *
-   * @return the iterable of all rule names contained in database.
+   * @return the iterable of all ratings contained in database.
    */
   @GetMapping("/list")
-  public Iterable<RuleName> getAll() {
-    LOGGER.info("API Request -> get all rule names...");
-    return ruleNameService.getAll();
+  public Iterable<Rating> getAll() {
+    LOGGER.info("API Request -> get all ratings...");
+    return ratingService.getAll();
   }
 
   /**
-   * This method is used to add a new rule name point into database.
+   * This method is used to add a new curve point into database.
    *
-   * @param ruleName is the Json body of the rule name you want to add.
-   * @return the confirmation message that you correctly added the rule name.
+   * @param rating is the Json body of the rating you want to add.
+   * @return the confirmation message that you correctly added the rating.
    */
   @PostMapping("/add")
   @Transactional
-  public ResponseEntity<String> create(@Valid @RequestBody RuleName ruleName) {
-    LOGGER.info("API Request -> saving rule name : ");
-    LOGGER.info(ruleName.toString());
-    RuleName savedRuleName = ruleNameService.save(ruleName);
+  public ResponseEntity<String> create(@Valid @RequestBody Rating rating) {
+    LOGGER.info("API Request -> saving rating : ");
+    LOGGER.info(rating.toString());
+    Rating savedRating = ratingService.save(rating);
     LOGGER.info("Rating saved successfully");
-    return ResponseEntity.ok("Successfully created with id : " + savedRuleName.getId() + ".");
-
+    return ResponseEntity.ok("Successfully created with id : " + savedRating.getId() + ".");
   }
 
   /**
-   * This method is used to recover a specific rule name thanks to its id.
+   * This method is used to recover a specific rating thanks to its id.
    *
-   * @param id is the rule name's id you are looking for.
-   * @return an optional rule name object
+   * @param id is the rating's id you are looking for.
+   * @return an optional rating object
    */
   @GetMapping("/list/{id}")
-  public Optional<RuleName> getById(@PathVariable Integer id) {
-    LOGGER.info("API Request -> get rule name with Id : " + id + "...");
-    return ruleNameService.findById(id);
+  public Optional<Rating> getById(@PathVariable Integer id) {
+    LOGGER.info("API Request -> get curve point with Id : " + id + "...");
+    return ratingService.findById(id);
   }
 
   /**
-   * This method is used to update an existing rule name from database.
+   * This method is used to update an existing rating from database.
    *
-   * @param ruleName is the curve point you want to modify.
-   * @return the confirmation message that you correctly updated the rule name.
+   * @param rating is the curve point you want to modify.
+   * @return the confirmation message that you correctly updated the rating.
    */
   @PutMapping("/update")
   @Transactional
-  public ResponseEntity<String> update(@Valid @RequestBody RuleName ruleName) {
-    LOGGER.info("API Request -> updating rule name : ");
-    LOGGER.info(ruleName.toString());
-    RuleName ruleNameFromDB = ruleNameService.findById(ruleName.getId()).orElseThrow(
-      () -> new NullPointerException("No rule name found with this id (" + ruleName.getId() + ")")
+  public ResponseEntity<String> update(@Valid @RequestBody Rating rating) {
+    LOGGER.info("API Request -> updating rating : ");
+    LOGGER.info(rating.toString());
+    Rating ratingFromDB = ratingService.findById(rating.getId()).orElseThrow(
+      () -> new NullPointerException("No rating found with this id (" + rating.getId() + ")")
     );
-    ruleNameService.update(ruleName, ruleNameFromDB);
-    LOGGER.info("Rule name updated successfully !");
-    return ResponseEntity.ok("Rule name successfully updated !");
+    ratingService.update(rating, ratingFromDB);
+    LOGGER.info("Rating updated successfully !");
+    return ResponseEntity.ok("Rating successfully updated !");
   }
 
   /**
-   * This method is used to delete a rule name from database.
+   * This method is used to delete a curve point from database.
    *
-   * @param id is the id of the rule name you want to delete.
+   * @param id is the id of the curve point you want to delete.
    * @return the confirmation message of deletion.
    */
   @DeleteMapping("/delete")
   @Transactional
   public ResponseEntity<String> delete(@RequestParam Integer id) {
-    LOGGER.info("API Request -> deleting rule name with id : " + id);
-    RuleName ruleNameToDelete = ruleNameService.findById(id)
-      .orElseThrow(() -> new NullPointerException("No rule name with id " + id + " exists in DB."));
-    ruleNameService.delete(ruleNameToDelete);
-    return ResponseEntity.ok("Rule name with id " + id + " has been deleted successfully.");
+    LOGGER.info("API Request -> deleting rating with id : " + id);
+    Rating ratingToDelete = ratingService.findById(id)
+      .orElseThrow(() -> new NullPointerException("No curve point with id " + id + " exists in DB."));
+    ratingService.delete(ratingToDelete);
+    return ResponseEntity.ok("Rating with id " + id + " has been deleted successfully.");
   }
 }

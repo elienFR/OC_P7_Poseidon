@@ -1,6 +1,6 @@
-package com.openclassrooms.poseidon.controllers;
+package com.openclassrooms.poseidon.controller;
 
-import com.openclassrooms.poseidon.controllers.rest.RatingRestController;
+import com.openclassrooms.poseidon.controller.rest.RatingRestController;
 import com.openclassrooms.poseidon.domain.Rating;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

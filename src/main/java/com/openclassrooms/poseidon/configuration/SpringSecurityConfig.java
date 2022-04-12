@@ -33,6 +33,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     throws Exception {
     auth.jdbcAuthentication()
       .dataSource(dataSource)
+      .usersByUsernameQuery(
+        "select username, password, enabled from users where username = ?;"
+      )
       .authoritiesByUsernameQuery(
         "select username, role as name from users u where username = ?;"
       );
@@ -41,23 +44,18 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   public void configure(HttpSecurity httpSecurity) throws Exception {
     httpSecurity
-      .httpBasic()
-
-      .and()
       .authorizeRequests()
 
-      .antMatchers("/").permitAll()
-      .antMatchers("/css/**").permitAll()
-      .antMatchers("/login").permitAll()
-      .antMatchers("/"+ apiVersion +"/**").hasRole("ADMIN")
+      .antMatchers("/", "/error/**", "/css/**", "/login").permitAll()
+      .antMatchers("/" + apiVersion + "/**").hasRole("ADMIN")
       .antMatchers("/**").hasRole("ADMIN")
 
-//      .anyRequest().authenticated()
+      .anyRequest().authenticated()
 
       .and()
       .formLogin()
       .loginProcessingUrl("/login_perform")
-      .defaultSuccessUrl("/admin/home", false)
+      .defaultSuccessUrl("/home", true)
 
       .and()
       .oauth2Login()
@@ -77,7 +75,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
       //Disabled for the API
       .and()
       .csrf()
-      .ignoringAntMatchers("/"+ apiVersion +"/**")
+      .ignoringAntMatchers("/" + apiVersion + "/**")
+
+      .and()
+      .httpBasic()
     ;
 
   }
