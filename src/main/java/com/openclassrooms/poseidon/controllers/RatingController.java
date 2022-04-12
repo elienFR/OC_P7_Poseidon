@@ -125,6 +125,7 @@ public class RatingController {
      * @return is a string path where to find the view for this controller's method.
      */
     @GetMapping("/delete/{id}")
+    @Transactional
     public String deleteRating(@PathVariable("id") Integer id, Model model) {
         LOGGER.info("Fetching /rating/delete/" + id);
         ratingRestController.delete(id);

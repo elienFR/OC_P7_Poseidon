@@ -98,7 +98,7 @@ public class CurvePointRestController {
    * This method is used to add a new curve point into database.
    *
    * @param curvePoint is the Json body of the curve point you want to add.
-   * @return the confirmation message that you correctly added the bid.
+   * @return the confirmation message that you correctly added the rule name.
    */
   @PostMapping("/add")
   @Transactional
@@ -114,7 +114,7 @@ public class CurvePointRestController {
    * This method is used to recover a specific curve point thanks to its id.
    *
    * @param id is the curve point's id you are looking for.
-   * @return an optional bidList object
+   * @return an optional rule name object
    */
   @GetMapping("/list/{id}")
   public Optional<CurvePoint> getById(@PathVariable Integer id) {

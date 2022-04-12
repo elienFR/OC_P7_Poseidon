@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -34,7 +36,14 @@ public class BidListService {
   }
 
   public BidList save(BidList bid) {
-    LOGGER.info("Contacting DB to save bid with id : " + bid.toString());
+    LOGGER.info("Contacting DB to save bid...");
+    //In case the saving is a new bid, then a date is added to its CreationDate attribute
+    if (bid.getBidListId() == null) {
+      LOGGER.info("Adding CreationDate attributes bid Object...");
+      bid.setCreationDate(
+        Timestamp.valueOf(LocalDateTime.now())
+      );
+    }
     return bidListRepository.save(bid);
   }
 

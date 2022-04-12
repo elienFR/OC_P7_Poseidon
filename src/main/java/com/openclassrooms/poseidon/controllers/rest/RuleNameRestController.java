@@ -1,14 +1,10 @@
 package com.openclassrooms.poseidon.controllers.rest;
 
-import com.openclassrooms.poseidon.controllers.RuleNameController;
-import com.openclassrooms.poseidon.domain.Rating;
 import com.openclassrooms.poseidon.domain.RuleName;
 import com.openclassrooms.poseidon.services.RuleNameService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.tomcat.util.digester.Rule;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -100,7 +96,7 @@ public class RuleNameRestController {
    * This method is used to add a new rule name point into database.
    *
    * @param ruleName is the Json body of the rule name you want to add.
-   * @return the confirmation message that you correctly added the bid.
+   * @return the confirmation message that you correctly added the rule name.
    */
   @PostMapping("/add")
   @Transactional
@@ -117,7 +113,7 @@ public class RuleNameRestController {
    * This method is used to recover a specific rule name thanks to its id.
    *
    * @param id is the rule name's id you are looking for.
-   * @return an optional bidList object
+   * @return an optional rule name object
    */
   @GetMapping("/list/{id}")
   public Optional<RuleName> getById(@PathVariable Integer id) {
@@ -158,6 +154,5 @@ public class RuleNameRestController {
       .orElseThrow(() -> new NullPointerException("No rule name with id " + id + " exists in DB."));
     ruleNameService.delete(ruleNameToDelete);
     return ResponseEntity.ok("Rule name with id " + id + " has been deleted successfully.");
-
   }
 }

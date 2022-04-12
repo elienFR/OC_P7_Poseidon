@@ -60,7 +60,7 @@ public class RuleNameController {
      * This method is used to validate a new rule name before adding it to database.
      *
      * @param ruleName is the ruleName Object in validation before add.
-     * @param result is the BindingResult object that checks if errors are present in curve point object.
+     * @param result is the BindingResult object that checks if errors are present in rule name object.
      * @param model is the model that display the page correctly.
      * @return is a string path where to find the view for this controller's method.
      */
@@ -127,6 +127,7 @@ public class RuleNameController {
      * @return is a string path where to find the view for this controller's method.
      */
     @GetMapping("/delete/{id}")
+    @Transactional
     public String deleteRuleName(@PathVariable("id") Integer id, Model model) {
         LOGGER.info("Fetching /ruleName/delete/" + id);
         ruleNameRestController.delete(id);

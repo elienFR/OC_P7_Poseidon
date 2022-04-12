@@ -122,7 +122,7 @@ public class BidListRestController {
   }
 
   /**
-   * This method is used to add a new a bid into database.
+   * This method is used to add a new bid into database.
    *
    * @param bid is the Json body of the bid you want to add.
    * @return the confirmation message that you correctly added the bid.
@@ -133,7 +133,7 @@ public class BidListRestController {
     LOGGER.info("API Request -> saving bid : ");
     LOGGER.info(bid.toString());
     BidList savedBid = bidListService.save(bid);
-    LOGGER.info("bid saved successfully");
+    LOGGER.info("Bid saved successfully");
     return ResponseEntity.ok("Successfully created with id : " + savedBid.getBidListId() + ".");
   }
 

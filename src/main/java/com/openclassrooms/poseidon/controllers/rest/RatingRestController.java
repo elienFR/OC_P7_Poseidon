@@ -96,7 +96,7 @@ public class RatingRestController {
    * This method is used to add a new curve point into database.
    *
    * @param rating is the Json body of the rating you want to add.
-   * @return the confirmation message that you correctly added the bid.
+   * @return the confirmation message that you correctly added the rating.
    */
   @PostMapping("/add")
   @Transactional
@@ -112,7 +112,7 @@ public class RatingRestController {
    * This method is used to recover a specific rating thanks to its id.
    *
    * @param id is the rating's id you are looking for.
-   * @return an optional bidList object
+   * @return an optional rating object
    */
   @GetMapping("/list/{id}")
   public Optional<Rating> getById(@PathVariable Integer id) {

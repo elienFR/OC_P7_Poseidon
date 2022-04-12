@@ -1,6 +1,5 @@
 package com.openclassrooms.poseidon.services;
 
-import com.openclassrooms.poseidon.domain.Rating;
 import com.openclassrooms.poseidon.domain.RuleName;
 import com.openclassrooms.poseidon.repositories.RuleNameRepository;
 import org.apache.logging.log4j.LogManager;
@@ -31,7 +30,7 @@ public class RuleNameService {
   }
 
   public Optional<RuleName> findById(Integer id) {
-    LOGGER.info("Contacting DB to find rating with id : " + id);
+    LOGGER.info("Contacting DB to find rule name with id : " + id);
     return ruleNameRepository.findById(id);
   }
 
@@ -53,7 +52,7 @@ public class RuleNameService {
   }
 
   public void delete(RuleName ruleNameToDelete) {
-    LOGGER.info("Contacting DB to delete rating : " + ruleNameToDelete.toString());
+    LOGGER.info("Contacting DB to delete rule name : " + ruleNameToDelete.toString());
     ruleNameRepository.delete(ruleNameToDelete);
   }
 }
