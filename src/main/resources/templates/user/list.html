@@ -14,7 +14,13 @@
 
 		</div>
 		<div class="col-6 text-right">
-			<a href="/">Home</a>&nbsp;|&nbsp;<a href="/login">Login</a>
+			<a href="/">Home</a>&nbsp;|&nbsp;
+			<div>
+				Logged in user: <b th:inline="text"  class="user"><span sec:authentication="name"></span></b>
+				<form th:action="@{/app-logout}" method="POST">
+					<input type="submit" value="Logout"/>
+				</form>
+			</div>
 		</div>
 	</div>
 	<div class="row"><h2>User List</h2></div>

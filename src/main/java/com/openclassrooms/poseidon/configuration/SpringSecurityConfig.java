@@ -41,24 +41,24 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   public void configure(HttpSecurity httpSecurity) throws Exception {
     httpSecurity
+      .httpBasic()
+
+      .and()
       .authorizeRequests()
+
       .antMatchers("/").permitAll()
       .antMatchers("/css/**").permitAll()
       .antMatchers("/login").permitAll()
-      // TODO : Remove /test from all permission
-      .antMatchers("/"+ apiVersion +"/**").permitAll()
-      ///////////////////////////////////////////
-      .antMatchers("/**").hasRole("USER")
+      .antMatchers("/"+ apiVersion +"/**").hasRole("ADMIN")
       .antMatchers("/**").hasRole("ADMIN")
 
-      .anyRequest().authenticated()
+//      .anyRequest().authenticated()
 
       .and()
       .formLogin()
       .loginProcessingUrl("/login_perform")
       .defaultSuccessUrl("/admin/home", false)
 
-//       TODO : Do we add OAuth2.0 authentication ?
       .and()
       .oauth2Login()
 
@@ -74,11 +74,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
       .deleteCookies("JSESSIONID")
       .deleteCookies("remember-me")
 
+      //Disabled for the API
       .and()
-      .httpBasic()
-      .and()
-      //TODO : RE ENABLE CSRF PROTECTION
-      .csrf().disable()
+      .csrf()
+      .ignoringAntMatchers("/"+ apiVersion +"/**")
     ;
 
   }

@@ -29,6 +29,11 @@ public class UserController {
 
   private Logger LOGGER = LogManager.getLogger(UserController.class);
 
+  @GetMapping("/user/list/index")
+  public String test(){
+    return "test";
+  }
+
   @RequestMapping("/user/list")
   public String home(Model model) {
     model.addAttribute("users", userRepository.findAll());
