@@ -100,7 +100,7 @@ public class CurveController {
      *
      * @param id is the curve point's id  that is supposed to be updated.
      * @param curvePoint is the curve point object to update through this method.
-     * @param result is the BindingResult object that checks if errors are present in bid object.
+     * @param result is the BindingResult object that checks if errors are present in curve point object.
      * @param model is the model that display the page correctly.
      * @return is a string path where to find the view for this controller's method.
      */

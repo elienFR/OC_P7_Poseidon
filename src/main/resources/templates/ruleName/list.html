@@ -3,7 +3,7 @@
 	  xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="utf-8"/>
-<title>Home</title>
+<title>Rule name - List</title>
 <link rel="stylesheet" href="../../css/bootstrap.min.css" >
 </head>
 <body>
@@ -40,7 +40,50 @@
 				</tr>
 			</thead>
 			<tbody>
-			<!-- TODO: Show all RuleName to the table, the Action column will have Edit & Delete buttons -->
+			<tr th:if="${ruleNames.empty}">
+				<td colspan="8" th:text="#{ruleNames.noRule}">No rule name made yet !</td>
+			</tr>
+			<tr th:each="ruleName : ${ruleNames}">
+				<td>
+					<span th:text="${ruleName.id}">
+						Id
+					</span>
+				</td>
+				<td>
+					<span th:text="${ruleName.name}">
+						Name
+					</span>
+				</td>
+				<td>
+					<span th:text="${ruleName.description}">
+						Description
+					</span>
+				</td>
+				<td>
+					<span th:text="${ruleName.json}">
+						json
+					</span>
+				</td>
+				<td>
+					<span th:text="${ruleName.template}">
+						template
+					</span>
+				</td>
+				<td>
+					<span th:text="${ruleName.sqlStr}">
+						sql
+					</span>
+				</td>
+				<td>
+					<span th:text="${ruleName.sqlPart}">
+						sqlpart
+					</span>
+				</td>
+				<td style="width: 15%" class="text-center">
+					<a th:href="@{/ruleName/update/{id}(id=${ruleName.id})}">Edit</a>&nbsp;|&nbsp;
+					<a th:href="@{/ruleName/delete/{id}(id=${ruleName.id})}">Delete</a>
+				</td>
+			</tr>
 			</tbody>
 		</table>
 	</div>

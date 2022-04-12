@@ -126,7 +126,7 @@ public class CurvePointRestController {
    * This method is used to update an existing curve point from database.
    *
    * @param curvePoint is the curve point you want to modify.
-   * @return the confirmation message that you correctly updated the bid.
+   * @return the confirmation message that you correctly updated the curve point.
    */
   @PutMapping("/update")
   @Transactional
