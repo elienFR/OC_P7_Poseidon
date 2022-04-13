@@ -7,19 +7,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.security.Principal;
 
 @Controller
-public class HomeController
-{
-	@GetMapping("/")
-	public String home(Principal principal, Model model)
-	{
-		return "home";
-	}
+public class HomeController {
+  @GetMapping("/")
+  public String home(Principal principal, Model model) {
+    return "home";
+  }
 
-	@GetMapping("/home")
-	public String bidListHome(Model model)
-	{
-		return "redirect:/bidList/list";
-	}
+  @GetMapping("/home")
+  public String bidListHome(Model model) {
+    return "redirect:/bidList/list";
+  }
 
 
 }

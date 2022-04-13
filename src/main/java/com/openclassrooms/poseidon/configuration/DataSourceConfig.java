@@ -20,7 +20,6 @@ public class DataSourceConfig {
   private String password;
   @Value("${spring.datasource.url}")
   private String url;
-//  @Value("${spring.datasource.driver-class-name}")
   @Value("${spring.jpa.properties.hibernate.dialect}")
   private String driver;
 

@@ -53,9 +53,9 @@ public class BidListController {
   /**
    * This method is used to validate a new bid before adding it to database.
    *
-   * @param bid is the bidList Object in validation before add.
+   * @param bid    is the bidList Object in validation before add.
    * @param result is the BindingResult object that checks if errors are present in bid object.
-   * @param model is the model that display the page correctly.
+   * @param model  is the model that display the page correctly.
    * @return is a string path where to find the view for this controller's method.
    */
   @PostMapping("/validate")
@@ -75,7 +75,7 @@ public class BidListController {
   /**
    * This method is used to display the update page of an existing bid before updating it to database.
    *
-   * @param id is the bidList's id that is supposed to be updated.
+   * @param id    is the bidList's id that is supposed to be updated.
    * @param model is the model that display the page correctly.
    * @return is a string path where to find the view for this controller's method.
    */
@@ -92,10 +92,10 @@ public class BidListController {
   /**
    * This method is used to validate and update an existing bid into database.
    *
-   * @param id is the bidList's id  that is supposed to be updated.
+   * @param id      is the bidList's id  that is supposed to be updated.
    * @param bidList is the BidList object to update through this method.
-   * @param result is the BindingResult object that checks if errors are present in bid object.
-   * @param model is the model that display the page correctly.
+   * @param result  is the BindingResult object that checks if errors are present in bid object.
+   * @param model   is the model that display the page correctly.
    * @return is a string path where to find the view for this controller's method.
    */
   @PostMapping("/update/{id}")
@@ -104,19 +104,19 @@ public class BidListController {
                           BindingResult result, Model model) {
     LOGGER.info("Updating through /bidList/update/" + id);
     LOGGER.info("Validating entries...");
-    if (result.hasErrors()){
+    if (result.hasErrors()) {
       return "bidlist/update";
     }
     LOGGER.info("Entries validated...");
     bidListRestController.update(bidList);
-      model.addAttribute("bidLists", bidListRestController.getAll());
-      return "redirect:/bidList/list";
+    model.addAttribute("bidLists", bidListRestController.getAll());
+    return "redirect:/bidList/list";
   }
 
   /**
    * This method is used to delete an existing bid from database.
    *
-   * @param id is the bidList's id that is supposed to be deleted.
+   * @param id    is the bidList's id that is supposed to be deleted.
    * @param model is the model that display the page correctly.
    * @return is a string path where to find the view for this controller's method.
    */

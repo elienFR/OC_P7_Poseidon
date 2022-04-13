@@ -28,8 +28,8 @@ public class Rating {
 
   @Column(name = "ordernumber")
   @NotNull
-  @Min(value = -128,message = "Order number must be upper than -128.")
-  @Max(value=127,message = "Order number must be less than 127.")
+  @Min(value = -128, message = "Order number must be upper than -128.")
+  @Max(value = 127, message = "Order number must be less than 127.")
   private Integer orderNumber;
 
   public Integer getId() {

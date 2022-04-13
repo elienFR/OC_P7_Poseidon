@@ -53,10 +53,10 @@ public class TradeService {
   public Trade update(Trade modifiedTrade, Trade tradeToUpdate) {
     LOGGER.info("Contacting DB to update trade...");
     if (modifiedTrade.getTradeId() != tradeToUpdate.getTradeId()) {
-    LOGGER.warn("Your two trades have different id. Update is not possible !");
-    throw new RuntimeException("Trades ID mismatch.");
-  }
-  //we only set parameters accessible from html form
+      LOGGER.warn("Your two trades have different id. Update is not possible !");
+      throw new RuntimeException("Trades ID mismatch.");
+    }
+    //we only set parameters accessible from html form
     tradeToUpdate.setAccount(modifiedTrade.getAccount());
     tradeToUpdate.setType(modifiedTrade.getType());
     tradeToUpdate.setBuyQuantity(modifiedTrade.getBuyQuantity());

@@ -19,8 +19,8 @@ public class CurvePoint {
 
   @Column(name = "curveid")
   @NotNull
-  @Min(value = -128,message = "curveId must be upper than -128.")
-  @Max(value=127,message = "curveId must be less than 127.")
+  @Min(value = -128, message = "curveId must be upper than -128.")
+  @Max(value = 127, message = "curveId must be less than 127.")
   private Integer curveId;
 
   @Column(name = "asofdate")
