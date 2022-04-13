@@ -2,18 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
-
 <head>
       <title>404</title>
 </head>
 <body>
    <h3>NOT FOUND</h3>
-   <div>
-	    Logged in user: <b th:inline="text"  class="user"><span sec:authentication="name"></b>
-	    <form th:action="@{/app-logout}" method="POST">
-	         <input type="submit" value="Logout"/>
-	    </form>
-   </div> 	 
-    <p class="error" th:text="${errorMsg}">Error</p>
+   <p class="error" th:text="${errorMsg}">The page you are trying to reach has not been found !</p>
+   <p><a href="/">go back home</a></p>
 </body>
 </html>   
