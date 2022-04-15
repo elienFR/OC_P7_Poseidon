@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+      <title>500</title>
+</head>
+<body>
+   <h3>Internal Error</h3>
+   <p class="error" th:text="${errorMsg}">Server crashed !</p>
+   <p><a href="/">go back home</a></p>
+</body>
+</html>   

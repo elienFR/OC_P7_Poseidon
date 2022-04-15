@@ -1,5 +1,6 @@
 package com.openclassrooms.poseidon.controller.rest;
 
+import com.openclassrooms.poseidon.domain.DTO.UserDTO;
 import com.openclassrooms.poseidon.domain.User;
 import com.openclassrooms.poseidon.service.UserService;
 import org.apache.logging.log4j.LogManager;
@@ -94,6 +95,17 @@ public class UserRestController {
   }
 
   /**
+   * This method is used to display all userDTOs in a list.
+   *
+   * @return the iterable of all userDTOs contained in database.
+   */
+  @GetMapping("/list/dto")
+  public Iterable<UserDTO> getAllUserDTO() {
+    LOGGER.info("API Request -> get all users...");
+    return userService.getAllDTO();
+  }
+
+  /**
    * This method is used to add a new user into database.
    *
    * @param user is the Json body of the user you want to add.
@@ -107,6 +119,22 @@ public class UserRestController {
     User savedUser = userService.save(user);
     LOGGER.info("User saved successfully");
     return ResponseEntity.ok("Successfully created with id : " + savedUser.getId() + ".");
+  }
+
+  /**
+   * This method is used to add a new userDTO into database.
+   *
+   * @param userDTO is the Json body of the userDTO you want to add.
+   * @return the confirmation message that you correctly added the bid.
+   */
+  @PostMapping("/addDTO")
+  @Transactional
+  public ResponseEntity<String> createUserFromDTO(@Valid @RequestBody UserDTO userDTO) {
+    LOGGER.info("API Request -> saving userDTO : ");
+    LOGGER.info(userDTO.toString());
+    UserDTO savedUserDTO = userService.saveDTO(userDTO);
+    LOGGER.info("User saved successfully");
+    return ResponseEntity.ok("Successfully created with id : " + savedUserDTO.getId() + ".");
 
   }
 
@@ -125,7 +153,7 @@ public class UserRestController {
   /**
    * This method is used to update an existing user from database.
    *
-   * @param user is the curve point you want to modify.
+   * @param user is the user you want to modify.
    * @return the confirmation message that you correctly updated the user.
    */
   @PutMapping("/update")
@@ -139,6 +167,25 @@ public class UserRestController {
     userService.update(user, userFromDB);
     LOGGER.info("User updated successfully !");
     return ResponseEntity.ok("User successfully updated !");
+  }
+
+  /**
+   * This method is used to update an existing user from database.
+   *
+   * @param userDTO is the userDTO you want to modify.
+   * @return the confirmation message that you correctly updated the userDTO.
+   */
+  @PutMapping("/update/dto")
+  @Transactional
+  public ResponseEntity<String> updateDTO(UserDTO userDTO) {
+    LOGGER.info("API Request -> updating userDTO : ");
+    LOGGER.info(userDTO.toString());
+    User userFromDB = userService.findById(userDTO.getId()).orElseThrow(
+      () -> new NullPointerException("No user found with this id (" + userDTO.getId() + ")")
+    );
+    userService.updateDTO(userDTO, userFromDB);
+    LOGGER.info("User updated successfully with its DTO !");
+    return ResponseEntity.ok("User successfully updated with its DTO !");
   }
 
   /**
@@ -157,4 +204,19 @@ public class UserRestController {
     return ResponseEntity.ok("User with id " + id + " has been deleted successfully.");
 
   }
+
+  /**
+   * This method is used to recover a specific userdto thanks to its id.
+   *
+   * @param id is the userdto's id you are looking for.
+   * @return an optional user object
+   */
+  @GetMapping("/list/dto/{id}")
+  public Optional<UserDTO> getDTOById(@PathVariable Integer id) {
+    LOGGER.info("API Request -> get userDTO with Id : " + id + "...");
+    return userService.findDTOById(id);
+  }
+
+
+
 }

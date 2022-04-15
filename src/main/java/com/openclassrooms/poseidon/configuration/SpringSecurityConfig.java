@@ -37,7 +37,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         "select username, password, enabled from users where username = ?;"
       )
       .authoritiesByUsernameQuery(
-        "select username, role as name from users u where username = ?;"
+        "select username, role as name "
+         + "from users u join authorities a on (u.Id=a.userid) " +
+          "where username = ?;"
       );
   }
 
@@ -45,17 +47,16 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
   public void configure(HttpSecurity httpSecurity) throws Exception {
     httpSecurity
       .authorizeRequests()
-
       .antMatchers("/", "/error/**", "/css/**", "/login").permitAll()
       .antMatchers("/" + apiVersion + "/**").hasRole("ADMIN")
+      .antMatchers("/user/**").hasRole("USER")
       .antMatchers("/**").hasRole("ADMIN")
-
       .anyRequest().authenticated()
 
       .and()
       .formLogin()
       .loginProcessingUrl("/login_perform")
-      .defaultSuccessUrl("/home", true)
+      .defaultSuccessUrl("/home", false)
 
       .and()
       .oauth2Login()
