@@ -55,7 +55,7 @@ public class BidListService {
   }
 
   public BidList update(BidList modifiedBidList, BidList bidListToUpdate) {
-    LOGGER.info("Contacting DB to update curve point...");
+    LOGGER.info("Contacting DB to update bid...");
     if (modifiedBidList.getBidListId() != bidListToUpdate.getBidListId()) {
       LOGGER.warn("Your two bids have different id. Update is not possible !");
       throw new RuntimeException("Bid's ID mismatch.");

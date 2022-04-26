@@ -28,10 +28,10 @@ import static org.mockito.Mockito.*;
 public class UserServiceUnitTest {
 
   @Autowired
-  private UserService userService;
+  private UserService userServiceUnderTest;
 
   @MockBean
-  private UserRepository userRepository;
+  private UserRepository userRepositoryMocked;
 
 
   private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(BCryptPasswordEncoder.BCryptVersion.$2B);
@@ -69,12 +69,12 @@ public class UserServiceUnitTest {
   @Test
   public void getAllTest() {
     Iterable<User> expected = new ArrayList<>();
-    when(userRepository.findAll()).thenReturn(expected);
+    when(userRepositoryMocked.findAll()).thenReturn(expected);
 
-    Iterable<User> result = userService.getAll();
+    Iterable<User> result = userServiceUnderTest.getAll();
 
     assertThat(result).isEqualTo(expected);
-    verify(userRepository, times(1)).findAll();
+    verify(userRepositoryMocked, times(1)).findAll();
   }
 
   @Test
@@ -85,9 +85,9 @@ public class UserServiceUnitTest {
     User user3 = new User();
     expected.addAll(List.of(user1, user2, user3));
 
-    when(userRepository.findAll()).thenReturn(expected);
+    when(userRepositoryMocked.findAll()).thenReturn(expected);
 
-    List<UserDTO> results = Lists.newArrayList(userService.getAllDTO());
+    List<UserDTO> results = Lists.newArrayList(userServiceUnderTest.getAllDTO());
     assertThat(results.size()).isEqualTo(3);
     for (UserDTO result : results) {
       assertThat(result).isInstanceOf(UserDTO.class);
@@ -105,9 +105,9 @@ public class UserServiceUnitTest {
     String encodedPassword = passwordEncoder.encode(givenRawPassword);
     expectedUser.setPassword(encodedPassword);
 
-    when(userRepository.save(givenUser)).thenReturn(expectedUser);
+    when(userRepositoryMocked.save(givenUser)).thenReturn(expectedUser);
 
-    User result = userService.save(givenUser);
+    User result = userServiceUnderTest.save(givenUser);
 
     assertThat(result.getId()).isEqualTo(28);
     assertThat(
@@ -125,9 +125,9 @@ public class UserServiceUnitTest {
     String encodedPassword = passwordEncoder.encode(givenRawPassword);
     expectedUser.setPassword(encodedPassword);
 
-    when(userRepository.save(any(User.class))).thenReturn(expectedUser);
+    when(userRepositoryMocked.save(any(User.class))).thenReturn(expectedUser);
 
-    UserDTO result = userService.saveDTO(givenUserDTO);
+    UserDTO result = userServiceUnderTest.saveDTO(givenUserDTO);
 
     assertThat(result.getId()).isEqualTo(28);
     assertThat(passwordEncoder.matches(givenRawPassword, result.getPassword())).isTrue();
@@ -150,9 +150,9 @@ public class UserServiceUnitTest {
     String encodedPassword = passwordEncoder.encode(givenRawPassword);
     expectedUser.setPassword(encodedPassword);
 
-    when(userRepository.save(any(User.class))).thenReturn(expectedUser);
+    when(userRepositoryMocked.save(any(User.class))).thenReturn(expectedUser);
 
-    UserDTO result = userService.saveDTO(givenUserDTO);
+    UserDTO result = userServiceUnderTest.saveDTO(givenUserDTO);
 
     assertThat(result.getId()).isEqualTo(28);
     assertThat(passwordEncoder.matches(givenRawPassword, result.getPassword())).isTrue();
@@ -164,12 +164,12 @@ public class UserServiceUnitTest {
     User user = new User();
     Optional<User> expected = Optional.of(user);
 
-    when(userRepository.findById(4)).thenReturn(expected);
+    when(userRepositoryMocked.findById(4)).thenReturn(expected);
 
-    Optional<User> result = userService.findById(4);
+    Optional<User> result = userServiceUnderTest.findById(4);
 
     assertThat(result).isEqualTo(expected);
-    verify(userRepository, times(1)).findById(4);
+    verify(userRepositoryMocked, times(1)).findById(4);
   }
 
   @Test
@@ -180,7 +180,7 @@ public class UserServiceUnitTest {
     String expectedMessage = "Users ID mismatch.";
 
     Exception exception = assertThrows(RuntimeException.class, () -> {
-      userService.update(givenUser, givenModifiedUser);
+      userServiceUnderTest.update(givenUser, givenModifiedUser);
     });
 
     String resultMessage = exception.getMessage();
@@ -203,11 +203,11 @@ public class UserServiceUnitTest {
     givenModifiedUser.setId(28);
     givenModifiedUser.setPassword(someNewRawPassword);
 
-    when(userRepository.save(givenUser)).thenReturn(givenUser);
+    when(userRepositoryMocked.save(givenUser)).thenReturn(givenUser);
 
-    User result = userService.update(givenModifiedUser, givenUser);
+    User result = userServiceUnderTest.update(givenModifiedUser, givenUser);
 
-    verify(userRepository, times(1)).save(givenUser);
+    verify(userRepositoryMocked, times(1)).save(givenUser);
     assertThat(result.getUsername()).isEqualTo(someNewUserName);
     assertThat(result.getFullname()).isEqualTo(someNewFullName);
     assertThat(passwordEncoder.matches(someNewRawPassword,result.getPassword()));
@@ -229,12 +229,12 @@ public class UserServiceUnitTest {
     givenModifiedUserDTO.setId(28);
     givenModifiedUserDTO.setPassword(someNewRawPassword);
 
-    when(userRepository.save(givenUser)).thenReturn(givenUser);
-    when(userRepository.findById(28)).thenReturn(Optional.of(givenUser));
+    when(userRepositoryMocked.save(givenUser)).thenReturn(givenUser);
+    when(userRepositoryMocked.findById(28)).thenReturn(Optional.of(givenUser));
 
-    UserDTO result = userService.updateDTO(givenModifiedUserDTO, givenUser);
+    UserDTO result = userServiceUnderTest.updateDTO(givenModifiedUserDTO, givenUser);
 
-    verify(userRepository, times(1)).save(givenUser);
+    verify(userRepositoryMocked, times(1)).save(givenUser);
     assertThat(result.getUsername()).isEqualTo(someNewUserName);
     assertThat(result.getFullname()).isEqualTo(someNewFullName);
     assertThat(passwordEncoder.matches(someNewRawPassword,result.getPassword()));
@@ -245,16 +245,16 @@ public class UserServiceUnitTest {
   public void deleteTest() {
     User userToDelete = new User();
 
-    userService.delete(userToDelete);
+    userServiceUnderTest.delete(userToDelete);
 
-    verify(userRepository, times(1)).delete(userToDelete);
+    verify(userRepositoryMocked, times(1)).delete(userToDelete);
   }
 
   @Test
   public void findDTOByIdTest() {
-    Optional<UserDTO> result = userService.findDTOById(28);
+    Optional<UserDTO> result = userServiceUnderTest.findDTOById(28);
 
-    verify(userRepository, times(1)).findById(28);
+    verify(userRepositoryMocked, times(1)).findById(28);
   }
 
 }

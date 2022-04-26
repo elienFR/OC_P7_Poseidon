@@ -149,7 +149,7 @@ public class BidListRestController {
     BidList bidListFromDb = bidListService.findById(bid.getBidListId()).orElseThrow(
       () -> new NullPointerException("No bid found with this id (" + bid.getBidListId() + ")")
     );
-    LOGGER.info("bid updated successfully");
+    LOGGER.info("Bid to update found in DB.");
     bidListService.update(bid, bidListFromDb);
     return ResponseEntity.ok("Bid successfully updated !");
   }
