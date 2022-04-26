@@ -33,15 +33,13 @@ public class TradeService {
     //In case the saving is a new trade, then a date is added to its CreationDate attribute
     if (trade.getTradeId() != null) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-        "Forbidden to save a curve point with specific id",
-        new IllegalArgumentException("Forbidden to save a curve point with specific id"));
+        "Forbidden to save a trade with specific id",
+        new IllegalArgumentException("Forbidden to save a trade with specific id"));
     }
-    if (trade.getTradeId() == null) {
-      LOGGER.info("Adding CreationDate attributes curvePoint Object...");
-      trade.setCreationDate(
-        Timestamp.valueOf(LocalDateTime.now())
-      );
-    }
+    LOGGER.info("Adding CreationDate attributes trade Object...");
+    trade.setCreationDate(
+      Timestamp.valueOf(LocalDateTime.now())
+    );
     return tradeRepository.save(trade);
   }
 
