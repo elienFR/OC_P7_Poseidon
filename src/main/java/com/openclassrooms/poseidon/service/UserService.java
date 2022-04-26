@@ -27,9 +27,6 @@ public class UserService {
   private UserRepository userRepository;
 
   @Autowired
-  private AuthorityService authorityService;
-
-  @Autowired
   private SpringSecurityConfig springSecurityConfig;
 
 
@@ -110,7 +107,7 @@ public class UserService {
       user.setEnabled(userDtoToConvert.isEnabled());
       user.setFullname(userDtoToConvert.getFullname());
 
-      //For authorities we check database first
+      //For authorities, we check database first
       List<String> authorities = new ArrayList<>();
       user.getAuthorities().forEach(authority -> authorities.add(authority.getRole().toString()));
 
