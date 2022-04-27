@@ -29,8 +29,12 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
   }
 
   @Autowired
-  public void configureGlobal(AuthenticationManagerBuilder auth)
-    throws Exception {
+  public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+    auth.inMemoryAuthentication()
+      .withUser("springadmin").password("$2b$10$kv4VoEktZZhs4ukksvozuOVUgXawst4Sg9pkQQUX8Ful0r2WT9tdO").roles("ADMIN", "USER")
+      .and()
+      .withUser("springuser").password("$2b$10$shK1zb9/88ZBYn5oQnSdHucz8TuLfkbalS2Z.yNAnOQMH819VkGAy").roles("USER");
+
     auth.jdbcAuthentication()
       .dataSource(dataSource)
       .usersByUsernameQuery(
@@ -38,7 +42,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
       )
       .authoritiesByUsernameQuery(
         "select username, role as name "
-         + "from users u join authorities a on (u.Id=a.userid) " +
+          + "from users u join authorities a on (u.Id=a.userid) " +
           "where username = ?;"
       );
   }

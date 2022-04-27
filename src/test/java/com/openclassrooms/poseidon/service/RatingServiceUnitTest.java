@@ -1,4 +1,4 @@
-package com.openclassrooms.poseidon;
+package com.openclassrooms.poseidon.service;
 
 import com.openclassrooms.poseidon.domain.Rating;
 import com.openclassrooms.poseidon.repository.RatingRepository;

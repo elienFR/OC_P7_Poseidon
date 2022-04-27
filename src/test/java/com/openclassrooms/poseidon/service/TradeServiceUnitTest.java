@@ -1,4 +1,4 @@
-package com.openclassrooms.poseidon;
+package com.openclassrooms.poseidon.service;
 
 import com.openclassrooms.poseidon.domain.Trade;
 import com.openclassrooms.poseidon.repository.TradeRepository;

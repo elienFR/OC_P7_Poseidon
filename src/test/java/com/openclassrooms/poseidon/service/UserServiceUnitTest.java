@@ -1,4 +1,4 @@
-package com.openclassrooms.poseidon;
+package com.openclassrooms.poseidon.service;
 
 import com.openclassrooms.poseidon.domain.Authority;
 import com.openclassrooms.poseidon.domain.DTO.UserDTO;

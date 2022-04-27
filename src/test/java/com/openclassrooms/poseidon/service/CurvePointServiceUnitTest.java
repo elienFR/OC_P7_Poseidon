@@ -1,4 +1,4 @@
-package com.openclassrooms.poseidon;
+package com.openclassrooms.poseidon.service;
 
 import com.nimbusds.jose.jwk.Curve;
 import com.openclassrooms.poseidon.domain.CurvePoint;
