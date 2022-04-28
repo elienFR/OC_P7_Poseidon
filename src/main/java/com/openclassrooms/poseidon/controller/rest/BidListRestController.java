@@ -11,6 +11,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -39,7 +40,7 @@ public class BidListRestController {
    */
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ExceptionHandler(MethodArgumentNotValidException.class)
-  public Map<String, String> handleValidationExceptions(
+  private Map<String, String> handleValidationExceptions(
     MethodArgumentNotValidException ex) {
     Map<String, String> errors = new HashMap<>();
     ex.getBindingResult().getAllErrors().forEach(
@@ -54,14 +55,14 @@ public class BidListRestController {
 
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ExceptionHandler(IllegalArgumentException.class)
-  public String handleValidationExceptions(
+  private String handleValidationExceptions(
     IllegalArgumentException ex) {
     return ex.getLocalizedMessage();
   }
 
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ExceptionHandler(HttpMessageNotReadableException.class)
-  public String handleValidationExceptions(
+  private String handleValidationExceptions(
     HttpMessageNotReadableException ex) {
     return "The json you provided cannot be parsed. Some variable does not match the scheme.";
   }
@@ -75,7 +76,7 @@ public class BidListRestController {
    */
   @ResponseStatus(HttpStatus.NOT_FOUND)
   @ExceptionHandler(NullPointerException.class)
-  public String handleValidationExceptions(
+  private String handleValidationExceptions(
     NullPointerException ex) {
     return ex.getLocalizedMessage();
   }
@@ -114,7 +115,7 @@ public class BidListRestController {
   public ResponseEntity<String> delete(@RequestParam Integer id) {
     LOGGER.info("API Request -> deleting bid with id : " + id);
     BidList bidListToDelete = bidListService.findById(id)
-      .orElseThrow(() -> new IllegalArgumentException("Invalid bidList id:" + id));
+      .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND ,"Invalid bidList id:" + id));
     bidListService.delete(bidListToDelete);
     return ResponseEntity.ok("BidList with id " + id + " has been deleted successfully.");
   }

@@ -2,7 +2,6 @@ package com.openclassrooms.poseidon.controller;
 
 import com.openclassrooms.poseidon.controller.rest.UserRestController;
 import com.openclassrooms.poseidon.domain.DTO.UserDTO;
-import com.openclassrooms.poseidon.domain.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +36,7 @@ public class UserController {
    * @return is a string path where to find the view for this controller's method.
    */
   @GetMapping("/list")
-  public String home(Model model) {
+  public String home(Model model, Principal principal) {
     LOGGER.info("Fetching /user/list...");
     Iterable<UserDTO> users = userRestController.getAllUserDTO();
     model.addAttribute("users", users);
