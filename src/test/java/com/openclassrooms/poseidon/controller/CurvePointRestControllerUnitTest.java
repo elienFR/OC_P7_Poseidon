@@ -2,8 +2,8 @@ package com.openclassrooms.poseidon.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.openclassrooms.poseidon.domain.BidList;
-import com.openclassrooms.poseidon.service.BidListService;
+import com.openclassrooms.poseidon.domain.CurvePoint;
+import com.openclassrooms.poseidon.service.CurvePointService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,52 +14,55 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
-
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @WithMockUser(username = "springadmin", roles = {"ADMIN", "USER"})
-public class BidListRestControllerUnitTest {
+public class CurvePointRestControllerUnitTest {
 
   @Autowired
   private MockMvc mockMvc;
 
   @MockBean
-  private BidListService bidListServiceMocked;
+  private CurvePointService curvePointServiceMocked;
 
   @Value("${api.ver}")
   private String apiVer;
 
   private String baseUrl;
 
-  private BidList givenBidList;
+  private CurvePoint givenCurvePoint;
 
   private Gson gson
     = new GsonBuilder()
     .setPrettyPrinting()
     .create();
 
-  private String jsonOfGivenBidList;
+  private String jsonOfGivenCurvePoint;
 
   @BeforeEach
   public void setUp() {
     //URL base setup
-    baseUrl = "/" + apiVer + "/bidList";
+    baseUrl = "/" + apiVer + "/curvePoint";
 
-    givenBidList = new BidList();
-    givenBidList.setAccount("someAccount");
-    givenBidList.setType("someType");
-    givenBidList.setBidQuantity(28.0d);
+    givenCurvePoint = new CurvePoint();
+    Integer givenCurveId = 1;
+    Double givenTerm = 2.0d;
+    Double givenValue = 3.0d;
+    givenCurvePoint = new CurvePoint();
+    givenCurvePoint.setCurveId(givenCurveId);
+    givenCurvePoint.setTerm(givenTerm);
+    givenCurvePoint.setValue(givenValue);
 
-    jsonOfGivenBidList = gson.toJson(givenBidList);
+    jsonOfGivenCurvePoint = gson.toJson(givenCurvePoint);
   }
 
   @WithMockUser(username = "sringuser")
@@ -67,14 +70,14 @@ public class BidListRestControllerUnitTest {
   public void getAllUnauthorizedTest() throws Exception {
     mockMvc.perform(get(baseUrl + "/list"))
       .andExpect(status().isForbidden());
-    verify(bidListServiceMocked, times(0)).getAll();
+    verify(curvePointServiceMocked, times(0)).getAll();
   }
 
   @Test
   public void getAllTest() throws Exception {
     mockMvc.perform(get(baseUrl + "/list"))
       .andExpect(status().isOk());
-    verify(bidListServiceMocked, times(1)).getAll();
+    verify(curvePointServiceMocked, times(1)).getAll();
   }
 
   @Test
@@ -82,39 +85,39 @@ public class BidListRestControllerUnitTest {
     Integer givenInteger = 1;
     mockMvc.perform(get(baseUrl + "/list/" + givenInteger))
       .andExpect(status().isOk());
-    verify(bidListServiceMocked, times(1)).findById(1);
+    verify(curvePointServiceMocked, times(1)).findById(1);
   }
 
   @Test
   public void deleteTest() throws Exception {
-    when(bidListServiceMocked.findById(1)).thenReturn(Optional.of(new BidList()));
+    when(curvePointServiceMocked.findById(1)).thenReturn(Optional.of(new CurvePoint()));
     mockMvc.perform(
         delete(baseUrl + "/delete").param("id","1")
       )
       .andExpect(status().isOk());
-    verify(bidListServiceMocked, times(1)).findById(1);
+    verify(curvePointServiceMocked, times(1)).findById(1);
   }
 
   @Test
   public void deleteTestWithNotFound() throws Exception {
-    when(bidListServiceMocked.findById(1)).thenReturn(null);
+    when(curvePointServiceMocked.findById(1)).thenReturn(null);
     mockMvc.perform(
         delete(baseUrl + "/delete").param("id","1")
       )
       .andExpect(status().isNotFound());
-    verify(bidListServiceMocked, times(0)).delete(any(BidList.class));
+    verify(curvePointServiceMocked, times(0)).delete(any(CurvePoint.class));
   }
 
   @Test
   public void createTest() throws Exception {
-    when(bidListServiceMocked.save(any(BidList.class))).thenReturn(givenBidList);
+    when(curvePointServiceMocked.save(any(CurvePoint.class))).thenReturn(givenCurvePoint);
     mockMvc.perform(
         post(baseUrl + "/add")
           .contentType(MediaType.APPLICATION_JSON)
-          .content(jsonOfGivenBidList)
+          .content(jsonOfGivenCurvePoint)
       )
       .andExpect(status().isOk());
-    verify(bidListServiceMocked,times(1)).save(any(BidList.class));
+    verify(curvePointServiceMocked,times(1)).save(any(CurvePoint.class));
   }
 
   @Test
@@ -125,20 +128,20 @@ public class BidListRestControllerUnitTest {
           .content("")
       )
       .andExpect(status().isBadRequest());
-    verify(bidListServiceMocked,times(0)).save(any(BidList.class));
+    verify(curvePointServiceMocked,times(0)).save(any(CurvePoint.class));
   }
 
   @Test
   public void createNotValidTest() throws Exception {
-    givenBidList.setAccount(null);
-    jsonOfGivenBidList = gson.toJson(givenBidList);
+    givenCurvePoint.setTerm(null);
+    jsonOfGivenCurvePoint = gson.toJson(givenCurvePoint);
     mockMvc.perform(
         post(baseUrl + "/add")
           .contentType(MediaType.APPLICATION_JSON)
-          .content(jsonOfGivenBidList)
+          .content(jsonOfGivenCurvePoint)
       )
       .andExpect(status().isBadRequest());
-    verify(bidListServiceMocked,times(0)).save(any(BidList.class));
+    verify(curvePointServiceMocked,times(0)).save(any(CurvePoint.class));
   }
 
   @Test
@@ -148,31 +151,31 @@ public class BidListRestControllerUnitTest {
         .contentType(MediaType.APPLICATION_JSON)
         .content("")
     ).andExpect(status().isBadRequest());
-    verify(bidListServiceMocked,times(0)).update(any(BidList.class),any(BidList.class));
+    verify(curvePointServiceMocked,times(0)).update(any(CurvePoint.class),any(CurvePoint.class));
   }
 
   @Test
   public void updateWithNotFoundBidListTest() throws Exception {
-    when(bidListServiceMocked.findById(28)).thenReturn(null);
+    when(curvePointServiceMocked.findById(28)).thenReturn(null);
     mockMvc.perform(
       put(baseUrl + "/update")
         .contentType(MediaType.APPLICATION_JSON)
-        .content(jsonOfGivenBidList)
+        .content(jsonOfGivenCurvePoint)
     ).andExpect(status().isNotFound());
-    verify(bidListServiceMocked,times(0)).update(any(BidList.class),any(BidList.class));
+    verify(curvePointServiceMocked,times(0)).update(any(CurvePoint.class),any(CurvePoint.class));
   }
 
   @Test
   public void updateTest() throws Exception {
-    givenBidList.setBidListId(28);
-    jsonOfGivenBidList = gson.toJson(givenBidList);
-    when(bidListServiceMocked.findById(any(Integer.class))).thenReturn(Optional.of(givenBidList));
+    givenCurvePoint.setId(28);
+    jsonOfGivenCurvePoint = gson.toJson(givenCurvePoint);
+    when(curvePointServiceMocked.findById(any(Integer.class))).thenReturn(Optional.of(givenCurvePoint));
     mockMvc.perform(
       put(baseUrl + "/update")
         .contentType(MediaType.APPLICATION_JSON)
-        .content(jsonOfGivenBidList)
+        .content(jsonOfGivenCurvePoint)
     ).andExpect(status().isOk());
-    verify(bidListServiceMocked,times(1)).update(any(BidList.class),any(BidList.class));
+    verify(curvePointServiceMocked,times(1)).update(any(CurvePoint.class),any(CurvePoint.class));
   }
 
 }
