@@ -84,41 +84,14 @@ public class UserRestController {
   }
 
   /**
-   * This method is used to display all users in a list.
-   *
-   * @return the iterable of all users contained in database.
-   */
-  @GetMapping("/list")
-  public Iterable<User> getAll() {
-    LOGGER.info("API Request -> get all users...");
-    return userService.getAll();
-  }
-
-  /**
    * This method is used to display all userDTOs in a list.
    *
    * @return the iterable of all userDTOs contained in database.
    */
-  @GetMapping("/list/dto")
+  @GetMapping("/list")
   public Iterable<UserDTO> getAllUserDTO() {
     LOGGER.info("API Request -> get all users...");
     return userService.getAllDTO();
-  }
-
-  /**
-   * This method is used to add a new user into database.
-   *
-   * @param user is the Json body of the user you want to add.
-   * @return the confirmation message that you correctly added the bid.
-   */
-  @PostMapping("/add")
-  @Transactional
-  public ResponseEntity<String> create(@Valid @RequestBody User user) {
-    LOGGER.info("API Request -> saving user : ");
-    LOGGER.info(user.toString());
-    User savedUser = userService.save(user);
-    LOGGER.info("User saved successfully");
-    return ResponseEntity.ok("Successfully created with id : " + savedUser.getId() + ".");
   }
 
   /**
@@ -127,7 +100,7 @@ public class UserRestController {
    * @param userDTO is the Json body of the userDTO you want to add.
    * @return the confirmation message that you correctly added the bid.
    */
-  @PostMapping("/addDTO")
+  @PostMapping("/add")
   @Transactional
   public ResponseEntity<String> createUserFromDTO(@Valid @RequestBody UserDTO userDTO) {
     LOGGER.info("API Request -> saving userDTO : ");
@@ -139,45 +112,14 @@ public class UserRestController {
   }
 
   /**
-   * This method is used to recover a specific user thanks to its id.
-   *
-   * @param id is the user's id you are looking for.
-   * @return an optional user object
-   */
-  @GetMapping("/list/{id}")
-  public Optional<User> getById(Integer id) {
-    LOGGER.info("API Request -> get user with Id : " + id + "...");
-    return userService.findById(id);
-  }
-
-  /**
-   * This method is used to update an existing user from database.
-   *
-   * @param user is the user you want to modify.
-   * @return the confirmation message that you correctly updated the user.
-   */
-  @PutMapping("/update")
-  @Transactional
-  public ResponseEntity<String> update(@Valid @RequestBody User user) {
-    LOGGER.info("API Request -> updating user : ");
-    LOGGER.info(user.toString());
-    User userFromDB = userService.findById(user.getId()).orElseThrow(
-      () -> new NullPointerException("No user found with this id (" + user.getId() + ")")
-    );
-    userService.update(user, userFromDB);
-    LOGGER.info("User updated successfully !");
-    return ResponseEntity.ok("User successfully updated !");
-  }
-
-  /**
    * This method is used to update an existing user from database.
    *
    * @param userDTO is the userDTO you want to modify.
    * @return the confirmation message that you correctly updated the userDTO.
    */
-  @PutMapping("/update/dto")
+  @PutMapping("/update")
   @Transactional
-  public ResponseEntity<String> updateDTO(UserDTO userDTO) {
+  public ResponseEntity<String> updateDTO(@Valid @RequestBody UserDTO userDTO) {
     LOGGER.info("API Request -> updating userDTO : ");
     LOGGER.info(userDTO.toString());
     User userFromDB = userService.findById(userDTO.getId()).orElseThrow(
@@ -211,7 +153,7 @@ public class UserRestController {
    * @param id is the userdto's id you are looking for.
    * @return an optional user object
    */
-  @GetMapping("/list/dto/{id}")
+  @GetMapping("/list/{id}")
   public Optional<UserDTO> getDTOById(@PathVariable Integer id) {
     LOGGER.info("API Request -> get userDTO with Id : " + id + "...");
     return userService.findDTOById(id);
