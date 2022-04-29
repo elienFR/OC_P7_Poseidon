@@ -128,6 +128,7 @@ public class BidListServiceUnitTest {
     modifiedBidList.setBidQuantity(givenBidQuantityToUpdate);
 
     when(bidListRepositoryMocked.save(givenBidList)).thenReturn(givenBidList);
+    when(bidListRepositoryMocked.existsById(42)).thenReturn(true);
 
     BidList result = bidListServiceUnderTest.update(modifiedBidList, givenBidList);
 

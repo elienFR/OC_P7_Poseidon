@@ -18,6 +18,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ *
+ * This class is a CRUD service for user objects
+ *
+ */
 @Service
 @Transactional
 public class UserService {
@@ -30,12 +35,21 @@ public class UserService {
   @Autowired
   private SpringSecurityConfig springSecurityConfig;
 
-
+  /**
+   * This method is used to display all user in iterables.
+   *
+   * @return is an iterable containing all user Object.
+   */
   public Iterable<User> getAll() {
     LOGGER.info("Contacting DB to get all users...");
     return userRepository.findAll();
   }
 
+  /**
+   * This method is used to display all userDTO in iterables.
+   *
+   * @return is an iterable containing all user Object.
+   */
   public Iterable<UserDTO> getAllDTO() {
     LOGGER.info("Contacting DB to get all userDTOs...");
     Iterable<User> users = getAll();
@@ -45,7 +59,16 @@ public class UserService {
     return userDTOs;
   }
 
-  //TODO : check principal corresponds to user you save if not admin
+  /**
+   * This method is used to save a NEW user in the database, and it also adds the creation
+   * date to the object.
+   * It checks that the object you want to save DOES have a null id.
+   * This null property means the object does not exist in DB.
+   * The password is hashed during the execution of this method.
+   *
+   * @param user is the user object you want to save.
+   * @return the saved user
+   */
   public User save(User user) {
     if(user.getId()==null && existsByUserName(user)){
       throw new RuntimeException("The user already exists with this username");
@@ -57,6 +80,15 @@ public class UserService {
     return userRepository.save(user);
   }
 
+  /**
+   * This method is used to save a NEW userDTO in the database.
+   * It checks that the object you want to save DOES have a null id.
+   * This null property means the object does not exist in DB.
+   * The password is hashed during the execution of this method.
+   *
+   * @param userDTO is the user object you want to save.
+   * @return the saved user
+   */
   public UserDTO saveDTO(UserDTO userDTO) throws UserAlreadyExistsException {
     Optional<UserDTO> optionalUserDTO = Optional.of(userDTO);
     User userToSave = convertUserDTOIntoUser(optionalUserDTO).get();
@@ -68,16 +100,35 @@ public class UserService {
     return savedUserDTO;
   }
 
+  /**
+   * This method is used to check the existence of a user in DB thanks to its username.
+   *
+   * @param user is the user you want to check.
+   * @return true if the user exists.
+   */
   private boolean existsByUserName(User user) {
     LOGGER.info("Checking user existence through its username : " + user.getUsername() + "...");
     return userRepository.existsByUsername(user.getUsername());
   }
 
+  /**
+   * This method is used to find a specific user object from DB thanks to its id.
+   *
+   * @param id is the id of the user you want to retrieve form DB.
+   * @return an optional user Object.
+   */
   public Optional<User> findById(Integer id) {
     LOGGER.info("Contacting DB to find user with id : " + id);
     return userRepository.findById(id);
   }
 
+  /**
+   * This method is used to update an EXISTING user object.
+   *
+   * @param modifiedUser is the object that is going to overwrite the one in DB.
+   * @param userToUpdate is the object from db to be updated. (the repo that connect to db will basically just check this object id).
+   * @return the updated user object
+   */
   public User update(User modifiedUser, User userToUpdate) {
     LOGGER.info("Contacting DB to update user...");
     if (modifiedUser.getId() != userToUpdate.getId()) {
@@ -94,6 +145,13 @@ public class UserService {
     return userRepository.save(userToUpdate);
   }
 
+  /**
+   * This method is used to update an EXISTING userDTO object.
+   *
+   * @param modifiedUserDTO is the object that is going to overwrite the one in DB.
+   * @param userFromDB is the object from db to be updated. (the repo that connect to db will basically just check this object id).
+   * @return the updated userDTO object
+   */
   public UserDTO updateDTO(UserDTO modifiedUserDTO, User userFromDB) {
     //Convert user DTO into user
     User modifiedUserFromDTO = convertUserDTOIntoUser(
@@ -105,6 +163,13 @@ public class UserService {
     return convertUserIntoUserDTO(optUpdatedUser).get();
   }
 
+  /**
+   *
+   * This method convert a UserDTO object into a User object.
+   *
+   * @param optUserDtoToConvert is the optional UserDTO object to convert.
+   * @return an optional user Object that corresponds to the userDTO input.
+   */
   private Optional<User> convertUserDTOIntoUser(Optional<UserDTO> optUserDtoToConvert) {
     if (optUserDtoToConvert.isPresent()) {
       UserDTO userDtoToConvert = optUserDtoToConvert.get();
@@ -157,11 +222,23 @@ public class UserService {
 
   }
 
+  /**
+   * This method is used to delete an existing user from database.
+   *
+   * @param userToDelete is the deleted user.
+   */
   public void delete(User userToDelete) {
     LOGGER.info("Contacting DB to delete user : " + userToDelete.toString());
     userRepository.delete(userToDelete);
   }
 
+  /**
+   *
+   * This method convert a User object into a UserDTO object.
+   *
+   * @param optUserToConvert is the Optional User object to convert.
+   * @return an optional UserDTO Object that corresponds to the user input.
+   */
   private Optional<UserDTO> convertUserIntoUserDTO(Optional<User> optUserToConvert) {
     if (optUserToConvert.isPresent()) {
       User userToConvert = optUserToConvert.get();
@@ -189,6 +266,12 @@ public class UserService {
     }
   }
 
+  /**
+   * This method is used to find a specific userDTO object from DB thanks to its id.
+   *
+   * @param id is the id of the userDTO you want to retrieve form DB.
+   * @return an optional userDTO Object.
+   */
   public Optional<UserDTO> findDTOById(Integer id) {
     return convertUserIntoUserDTO(findById(id));
   }

@@ -61,7 +61,7 @@ public class UserRestControllerUnitTest {
 
     String givenUsername = "someUsername";
     String givenFullName = "someFullName";
-    String givenRawPassword = "somePassword";
+    String givenRawPassword = "somePassword1@";
     givenUser = new User();
     givenUser.setUsername(givenUsername);
     givenUser.setFullname(givenFullName);

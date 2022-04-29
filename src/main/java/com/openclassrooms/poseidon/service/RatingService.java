@@ -12,6 +12,11 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.transaction.Transactional;
 import java.util.Optional;
 
+/**
+ *
+ * This class is a CRUD service for Ratings objects
+ *
+ */
 @Service
 @Transactional
 public class RatingService {
@@ -21,12 +26,24 @@ public class RatingService {
   @Autowired
   private RatingRepository ratingRepository;
 
-
+  /**
+   * This method is used to display all rating in iterables.
+   *
+   * @return is an iterable containing all rating Object.
+   */
   public Iterable<Rating> getAll() {
     LOGGER.info("Contacting DB to get all ratings...");
     return ratingRepository.findAll();
   }
 
+  /**
+   * This method is used to save a NEW rating in the database.
+   * It checks that the object you want to save DOES have a null id.
+   * This null property means the object does not exist in DB.
+   *
+   * @param rating is the BidList object you want to save.
+   * @return the saved rating
+   */
   public Rating save(Rating rating) {
     LOGGER.info("Contacting DB to save rating...");
     if (rating.getId() != null) {
@@ -37,11 +54,24 @@ public class RatingService {
     return ratingRepository.save(rating);
   }
 
+  /**
+   * This method is used to find a specific rating object from DB thanks to its id.
+   *
+   * @param id is the id of the rating you want to retrieve form DB.
+   * @return an optional rating Object.
+   */
   public Optional<Rating> findById(Integer id) {
     LOGGER.info("Contacting DB to find rating with id : " + id);
     return ratingRepository.findById(id);
   }
 
+  /**
+   * This method is used to update an EXISTING rating object.
+   *
+   * @param modifiedRating is the object that is going to overwrite the one in DB.
+   * @param ratingToUpdate is the object from db to be updated. (the repo that connect to db will basically just check this object id).
+   * @return the updated rating object
+   */
   public Rating update(Rating modifiedRating, Rating ratingToUpdate) {
     LOGGER.info("Contacting DB to update rating...");
     if (modifiedRating.getId() != ratingToUpdate.getId()) {
@@ -56,6 +86,11 @@ public class RatingService {
     return ratingRepository.save(ratingToUpdate);
   }
 
+  /**
+   * This method is used to delete an existing rating from database.
+   *
+   * @param ratingToDelete is the deleted rating.
+   */
   public void delete(Rating ratingToDelete) {
     LOGGER.info("Contacting DB to delete rating : " + ratingToDelete.toString());
     ratingRepository.delete(ratingToDelete);
