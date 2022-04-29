@@ -2,6 +2,7 @@ package com.openclassrooms.poseidon.controller;
 
 import com.openclassrooms.poseidon.controller.rest.UserRestController;
 import com.openclassrooms.poseidon.domain.DTO.UserDTO;
+import com.openclassrooms.poseidon.service.exception.UserAlreadyExistsException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,9 +59,9 @@ public class UserController {
   /**
    * This method is used to validate a new user before adding it to database.
    *
-   * @param userDTO   is the userDTO Object in validation before add.
-   * @param result is the BindingResult object that checks if errors are present in userDTO object.
-   * @param model  is the model that display the page correctly.
+   * @param userDTO is the userDTO Object in validation before add.
+   * @param result  is the BindingResult object that checks if errors are present in userDTO object.
+   * @param model   is the model that display the page correctly.
    * @return is a string path where to find the view for this controller's method.
    */
   @PostMapping("/validate")
@@ -73,7 +74,12 @@ public class UserController {
 
       model.addAttribute("users", userRestController.getAllUserDTO());
 
-      userRestController.createUserFromDTO(userDTO);
+      try {
+        userRestController.createUserFromDTO(userDTO);
+      } catch (UserAlreadyExistsException ex) {
+        model.addAttribute("userAlreadyExists", true);
+        return "user/add";
+      }
 
       return "redirect:/user/list";
     }
@@ -95,17 +101,17 @@ public class UserController {
     );
     //Blank password on form page
     userDTO.setPassword("");
-    model.addAttribute("user", userDTO);
+    model.addAttribute("userDTO", userDTO);
     return "user/update";
   }
 
   /**
    * This method is used to validate and update an existing user into database.
    *
-   * @param id     is the user's id  that is supposed to be updated.
-   * @param userDTO   is the user object to update through this method.
-   * @param result is the BindingResult object that checks if errors are present in user object.
-   * @param model  is the model that display the page correctly.
+   * @param id      is the user's id  that is supposed to be updated.
+   * @param userDTO is the user object to update through this method.
+   * @param result  is the BindingResult object that checks if errors are present in user object.
+   * @param model   is the model that display the page correctly.
    * @return is a string path where to find the view for this controller's method.
    */
   @PostMapping("/update/{id}")

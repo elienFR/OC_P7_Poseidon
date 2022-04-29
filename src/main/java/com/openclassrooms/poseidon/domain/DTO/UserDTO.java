@@ -1,6 +1,7 @@
 package com.openclassrooms.poseidon.domain.DTO;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 public class UserDTO {
 
@@ -10,6 +11,12 @@ public class UserDTO {
   private String username;
 
   @NotBlank(message = "Password is mandatory")
+  @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*[@#$%^&-+=()\"'!?])(?=.*[0-9]).{8,20}$",
+    message = "The password must contain : " +
+      "at least one symbole between these : @#$%^&-+=()\"'!? " +
+      "at least one number " +
+      "at least one lower and one upper case letter " +
+      "8 to 20 characters.")
   private String password;
 
   @NotBlank(message = "FullName is mandatory")

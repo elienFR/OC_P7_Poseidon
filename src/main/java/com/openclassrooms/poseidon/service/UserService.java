@@ -7,6 +7,7 @@ import com.openclassrooms.poseidon.domain.User;
 import com.openclassrooms.poseidon.domain.utils.Role;
 import com.openclassrooms.poseidon.repository.AuthorityRepository;
 import com.openclassrooms.poseidon.repository.UserRepository;
+import com.openclassrooms.poseidon.service.exception.UserAlreadyExistsException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,9 @@ public class UserService {
 
   //TODO : check principal corresponds to user you save if not admin
   public User save(User user) {
+    if(user.getId()==null && existsByUserName(user)){
+      throw new RuntimeException("The user already exists with this username");
+    }
     user.setPassword(
       springSecurityConfig.passwordEncoder().encode(user.getPassword())
     );
@@ -53,12 +57,20 @@ public class UserService {
     return userRepository.save(user);
   }
 
-  public UserDTO saveDTO(UserDTO userDTO) {
+  public UserDTO saveDTO(UserDTO userDTO) throws UserAlreadyExistsException {
     Optional<UserDTO> optionalUserDTO = Optional.of(userDTO);
     User userToSave = convertUserDTOIntoUser(optionalUserDTO).get();
+    if(userToSave.getId()==null && existsByUserName(userToSave)){
+      throw new UserAlreadyExistsException("The user already exists with this username");
+    }
     User savedUser = save(userToSave);
     UserDTO savedUserDTO = convertUserIntoUserDTO(Optional.of(savedUser)).get();
     return savedUserDTO;
+  }
+
+  private boolean existsByUserName(User user) {
+    LOGGER.info("Checking user existence through its username : " + user.getUsername() + "...");
+    return userRepository.existsByUsername(user.getUsername());
   }
 
   public Optional<User> findById(Integer id) {

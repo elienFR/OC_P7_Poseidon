@@ -6,6 +6,7 @@ import com.openclassrooms.poseidon.domain.User;
 import com.openclassrooms.poseidon.domain.utils.Role;
 import com.openclassrooms.poseidon.repository.UserRepository;
 import com.openclassrooms.poseidon.service.UserService;
+import com.openclassrooms.poseidon.service.exception.UserAlreadyExistsException;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -115,7 +116,7 @@ public class UserServiceUnitTest {
   }
 
   @Test
-  public void saveDTOTest() {
+  public void saveDTOTest() throws UserAlreadyExistsException {
     User expectedUser = new User();
     expectedUser.setUsername(givenUser.getUsername());
     expectedUser.setFullname(givenUser.getFullname());
@@ -135,7 +136,7 @@ public class UserServiceUnitTest {
   }
 
   @Test
-  public void saveAdminDTOTest() {
+  public void saveAdminDTOTest() throws UserAlreadyExistsException {
     Authority givenAuthorityAdmin = new Authority();
     givenAuthorityAdmin.setRole(Role.ROLE_ADMIN);
     givenUser.addAuthority(givenAuthorityAdmin);

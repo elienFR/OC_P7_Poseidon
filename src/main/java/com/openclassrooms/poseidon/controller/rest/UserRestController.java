@@ -3,6 +3,7 @@ package com.openclassrooms.poseidon.controller.rest;
 import com.openclassrooms.poseidon.domain.DTO.UserDTO;
 import com.openclassrooms.poseidon.domain.User;
 import com.openclassrooms.poseidon.service.UserService;
+import com.openclassrooms.poseidon.service.exception.UserAlreadyExistsException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,7 +103,7 @@ public class UserRestController {
    */
   @PostMapping("/add")
   @Transactional
-  public ResponseEntity<String> createUserFromDTO(@Valid @RequestBody UserDTO userDTO) {
+  public ResponseEntity<String> createUserFromDTO(@Valid @RequestBody UserDTO userDTO) throws UserAlreadyExistsException {
     LOGGER.info("API Request -> saving userDTO : ");
     LOGGER.info(userDTO.toString());
     UserDTO savedUserDTO = userService.saveDTO(userDTO);
