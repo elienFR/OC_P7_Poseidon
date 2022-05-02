@@ -10,10 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import javax.annotation.security.RolesAllowed;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -26,6 +29,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("${api.ver}" + "/user")
+@RolesAllowed("ROLE_ADMIN")
 public class UserRestController {
 
   private static final Logger LOGGER = LogManager.getLogger(UserRestController.class);
@@ -120,9 +124,22 @@ public class UserRestController {
    */
   @PutMapping("/update")
   @Transactional
-  public ResponseEntity<String> updateDTO(@Valid @RequestBody UserDTO userDTO) {
+  public ResponseEntity<String> updateDTO(@Valid @RequestBody UserDTO userDTO, Authentication authentication) {
     LOGGER.info("API Request -> updating userDTO : ");
     LOGGER.info(userDTO.toString());
+
+    Integer authenticatedID = userService
+      .getUserDTOByUserName(authentication.getName())
+      .get()
+      .getId();
+
+    if (!isAdmin(authentication) && authenticatedID != userDTO.getId()) {
+      throw new ResponseStatusException(
+        HttpStatus.FORBIDDEN,
+        "You are not allowed to modify another account than yours."
+      );
+    }
+
     User userFromDB = userService.findById(userDTO.getId()).orElseThrow(
       () -> new NullPointerException("No user found with this id (" + userDTO.getId() + ")")
     );
@@ -139,13 +156,21 @@ public class UserRestController {
    */
   @DeleteMapping("/delete")
   @Transactional
-  public ResponseEntity<String> delete(@RequestParam Integer id) {
+  public ResponseEntity<String> delete(@RequestParam Integer id, Authentication authentication) {
     LOGGER.info("API Request -> deleting user with id : " + id);
     User userToDelete = userService.findById(id)
       .orElseThrow(() -> new NullPointerException("No user with id " + id + " exists in DB."));
+
+    if (!isAdmin(authentication)
+      && !userToDelete.getId().equals(getUserDTOByUserName(authentication.getName()).getId())
+    ) {
+      throw new ResponseStatusException(
+        HttpStatus.FORBIDDEN,
+        "You are not allowed to delete this user"
+      );
+    }
     userService.delete(userToDelete);
     return ResponseEntity.ok("User with id " + id + " has been deleted successfully.");
-
   }
 
   /**
@@ -161,5 +186,49 @@ public class UserRestController {
   }
 
 
+  /**
+   * This method retrieve a userDTO thanks to its username.
+   *
+   * @param username is the username chosen to recover the userDTO
+   * @return a userDTO object corresponding to the username if present in DB.
+   * @throws ResponseStatusException with a HttpStatus.NOT_FOUND if no userDTO is found.
+   */
+  public UserDTO getUserDTOByUserName(String username) {
+    Optional<UserDTO> optionalUserDTO = userService.getUserDTOByUserName(username);
+    if (optionalUserDTO.isPresent()) {
+      return optionalUserDTO.get();
+    } else {
+      throw new ResponseStatusException(
+        HttpStatus.NOT_FOUND,
+        "No user found with this username : " + username
+      );
+    }
+  }
 
+  /**
+   * This method check if a user exists thanks to its username.
+   *
+   * @param username is the username to check
+   * @return true if it exists
+   */
+  public boolean existsByUsername(String username) {
+    return userService.existsByUsername(username);
+  }
+
+  /**
+   * This method checks if an authenticated user is has role admin.
+   *
+   * @param authentication is the authenticated user to check
+   * @return true if admin
+   */
+  private boolean isAdmin(Authentication authentication) {
+    if (authentication
+      .getAuthorities()
+      .stream()
+      .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))
+    ) {
+      return true;
+    }
+    return false;
+  }
 }

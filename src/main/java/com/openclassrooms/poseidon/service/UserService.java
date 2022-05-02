@@ -19,9 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- *
  * This class is a CRUD service for user objects
- *
  */
 @Service
 @Transactional
@@ -70,7 +68,7 @@ public class UserService {
    * @return the saved user
    */
   public User save(User user) {
-    if(user.getId()==null && existsByUserName(user)){
+    if (user.getId() == null && existsByUserName(user)) {
       throw new RuntimeException("The user already exists with this username");
     }
     user.setPassword(
@@ -92,7 +90,7 @@ public class UserService {
   public UserDTO saveDTO(UserDTO userDTO) throws UserAlreadyExistsException {
     Optional<UserDTO> optionalUserDTO = Optional.of(userDTO);
     User userToSave = convertUserDTOIntoUser(optionalUserDTO).get();
-    if(userToSave.getId()==null && existsByUserName(userToSave)){
+    if (userToSave.getId() == null && existsByUserName(userToSave)) {
       throw new UserAlreadyExistsException("The user already exists with this username");
     }
     User savedUser = save(userToSave);
@@ -137,19 +135,28 @@ public class UserService {
     }
     //we only set parameters accessible from html form
     userToUpdate.setFullname(modifiedUser.getFullname());
-    userToUpdate.setUsername(modifiedUser.getUsername());
-    userToUpdate.setPassword(modifiedUser.getPassword());
 
+    if (!modifiedUser.getUsername().equals(userToUpdate.getUsername())
+      && existsByUsername(modifiedUser.getUsername())) {
+      LOGGER.warn("The desired username is already taken. Update is not possible !");
+      throw new RuntimeException("Username already taken.");
+    } else {
+      userToUpdate.setUsername(modifiedUser.getUsername());
+    }
+
+    userToUpdate.setPassword(
+      modifiedUser.getPassword()
+    );
     userToUpdate.setAuthorities(modifiedUser.getAuthorities());
 
-    return userRepository.save(userToUpdate);
+    return save(userToUpdate);
   }
 
   /**
    * This method is used to update an EXISTING userDTO object.
    *
    * @param modifiedUserDTO is the object that is going to overwrite the one in DB.
-   * @param userFromDB is the object from db to be updated. (the repo that connect to db will basically just check this object id).
+   * @param userFromDB      is the object from db to be updated. (the repo that connect to db will basically just check this object id).
    * @return the updated userDTO object
    */
   public UserDTO updateDTO(UserDTO modifiedUserDTO, User userFromDB) {
@@ -164,7 +171,6 @@ public class UserService {
   }
 
   /**
-   *
    * This method convert a UserDTO object into a User object.
    *
    * @param optUserDtoToConvert is the optional UserDTO object to convert.
@@ -233,7 +239,6 @@ public class UserService {
   }
 
   /**
-   *
    * This method convert a User object into a UserDTO object.
    *
    * @param optUserToConvert is the Optional User object to convert.
@@ -277,4 +282,33 @@ public class UserService {
   }
 
 
+  /**
+   * This method is used to find a specific user object from DB thanks to its username.
+   *
+   * @param username is the user's username you want to retrieve form DB.
+   * @return an optional user Object.
+   */
+  public Optional<UserDTO> getUserDTOByUserName(String username) {
+    return convertUserIntoUserDTO(findByUserName(username));
+  }
+
+  /**
+   * This method is used to find a specific user object from DB thanks to its username.
+   *
+   * @param username is the user's username you want to retrieve form DB.
+   * @return an optional user Object.
+   */
+  private Optional<User> findByUserName(String username) {
+    return userRepository.findByUsername(username);
+  }
+
+  /**
+   * This method check if a user exists thanks to its username.
+   *
+   * @param username is the username to check
+   * @return true if it exists
+   */
+  public boolean existsByUsername(String username) {
+    return userRepository.existsByUsername(username);
+  }
 }

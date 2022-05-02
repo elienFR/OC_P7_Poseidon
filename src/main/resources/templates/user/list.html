@@ -25,7 +25,7 @@
     </div>
     <div class="row"><h2>User List</h2></div>
     <div class="row">
-        <a href="/user/add" class="btn btn-primary btn-sm">Add New</a>
+        <a href="/user/add" class="btn btn-primary btn-sm" th:if="${addingNotAllowed == null}">Add New</a>
         <table class="table table-bordered">
             <thead>
             <tr>
@@ -42,11 +42,6 @@
                 <td th:text="${user.fullname}"></td>
                 <td th:text="${user.username}"></td>
                 <td style="width: 25%" th:text="${user.role}"></td>
-<!--                <td style="width: 25%">-->
-<!--                    <p th:each="authority : ${user.authorities}">-->
-<!--                        <span th:text="${authority.role}"></span>-->
-<!--                    </p>-->
-<!--                </td>-->
                 <td style="width: 15%" class="text-center">
                     <a th:href="@{/user/update/{id}(id=${user.id})}">Edit</a>&nbsp;|&nbsp;
                     <a th:href="@{/user/delete/{id}(id=${user.id})}">Delete</a>

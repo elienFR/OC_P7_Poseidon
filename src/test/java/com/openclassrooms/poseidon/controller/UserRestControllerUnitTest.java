@@ -168,8 +168,9 @@ public class UserRestControllerUnitTest {
   }
 
   @Test
-  public void updateWithNotFoundBidListTest() throws Exception {
+  public void updateWithNotFoundUserTest() throws Exception {
     when(userServiceMocked.findById(28)).thenReturn(null);
+    when(userServiceMocked.getUserDTOByUserName(any(String.class))).thenReturn(Optional.of(new UserDTO()));
     mockMvc.perform(
       put(baseUrl + "/update")
         .contentType(MediaType.APPLICATION_JSON)
@@ -184,6 +185,7 @@ public class UserRestControllerUnitTest {
     jsonOfGivenUser = gson.toJson(givenUserDTO);
     Optional<User> optionalUser = Optional.of(givenUser);
     when(userServiceMocked.findById(any(Integer.class))).thenReturn(optionalUser);
+    when(userServiceMocked.getUserDTOByUserName(any(String.class))).thenReturn(Optional.of(givenUserDTO));
     mockMvc.perform(
       put(baseUrl + "/update")
         .contentType(MediaType.APPLICATION_JSON)
