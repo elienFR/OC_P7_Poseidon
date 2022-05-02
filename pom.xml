@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.openclassrooms</groupId>
 	<artifactId>poseidon</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1.1-SNAPSHOT</version>
 	<name>Poseidon App</name>
 	<description>This project is about adding a RESTFul to an existing project called Poseidon</description>
 	<properties>
