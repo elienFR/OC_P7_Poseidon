@@ -2,6 +2,14 @@
 
 This app is an exercice about implementing an API on an existing app called poseidon.
 
+## Technical:
+
+1. Framework: Spring Boot v2.6.6
+2. Java 11
+3. Thymeleaf
+4. Bootstrap v.4.3.1
+
+
 ## Before use
 
 1. Read Database Documentation
